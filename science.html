@@ -7,15 +7,15 @@
   <style>
     :root{--acid:#baff29;--cyan:#42f5ff;--amber:#ffbf3f;--red:#ff315d;--ink:#050708;--steel:#182024}
     *{box-sizing:border-box}html,body{min-height:100%;margin:0}
-    body{display:grid;place-items:center;overflow-x:hidden;background:
+    body{display:grid;place-items:center;height:100dvh;min-height:0;overflow:hidden;background:
       radial-gradient(circle at 50% 10%,#253137 0 12%,transparent 38%),
       repeating-linear-gradient(90deg,#080b0d 0 42px,#0b0f11 42px 44px);
-      color:#d7e5d4;font-family:"Courier New",monospace;padding:18px}
+      color:#d7e5d4;font-family:"Courier New",monospace;padding:8px}
     body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background:
       repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 4px)}
-    .cabinet{position:relative;width:min(980px,100%);padding:18px 22px 26px;border:3px solid #39474d;
+    html{height:100%;overflow:hidden}.cabinet{position:absolute;top:50%;left:50%;width:min(980px,100%);padding:18px 22px 26px;border:3px solid #39474d;
       border-radius:40px 40px 12px 12px;background:linear-gradient(100deg,#10171a,#263137 48%,#0c1214);
-      box-shadow:0 0 0 7px #050708,0 28px 60px #000,inset 0 0 40px #000}
+      box-shadow:0 0 0 7px #050708,0 28px 60px #000,inset 0 0 40px #000;transform-origin:center}
     .cabinet:before,.cabinet:after{content:"";position:absolute;bottom:-12px;width:20%;height:18px;background:#090d0f;border:3px solid #313d42}
     .cabinet:before{left:9%}.cabinet:after{right:9%}
     .marquee{position:relative;text-align:center;margin:-4px 4% 16px;padding:9px;border:3px solid #111;background:#f5eee1;
@@ -116,8 +116,9 @@
     function append(text){const d=document.createElement('div');d.textContent=text;log.prepend(d)}
     function finish(survived){state.locked=true;const total=state.score+Object.values(state.metrics).reduce((a,n)=>a+n,0)*5;const best=Math.max(Number(localStorage.getItem('scienceHigh')||0),total);localStorage.setItem('scienceHigh',best);$('modal').className='modal show'+(survived?' win':'');$('endTitle').textContent=survived?'THE PROJECT SURVIVED':'CAUSE OF DEATH IDENTIFIED';$('endText').textContent=survived?'You did not prove the project would succeed. You merely prevented six extremely plausible failures. Science considers this showing off.':`The ${Object.entries(state.metrics).sort((a,b)=>a[1]-b[1])[0][0].toLowerCase()} meter reached zero. The postmortem is already blaming communication.`;$('high').textContent=`FINAL EVIDENCE: ${total} · BEST: ${best}`;beep(survived?660:80,.3)}
     function cupHolder(){if(!state.active||state.locked)return;state.metrics.Budget=Math.max(0,state.metrics.Budget-3);state.metrics.Ethics=Math.max(0,state.metrics.Ethics-1);state.score+=17;append('> CUP HOLDER: BIOMETRIC SAMPLE ACCEPTED. THANK YOU, PLAYER 1.');render();beep(333,.1)}
+    function fitCabinet(){const cabinet=document.querySelector('.cabinet');cabinet.style.transform='none';const scale=Math.min(1,(innerWidth-16)/cabinet.offsetWidth,(innerHeight-16)/cabinet.offsetHeight);cabinet.style.transform=`translate(-50%,-50%) scale(${scale})`;cabinet.dataset.viewportScale=scale.toFixed(3)}
     $('start').onclick=start;$('again').onclick=start;
-    document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('game').classList.contains('active'))start();const all=[...document.querySelectorAll('.control')];const keys='123456789qwertyui';const i=keys.indexOf(e.key.toLowerCase());if(i>=0&&all[i])all[i].click()});
+    document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('game').classList.contains('active'))start();const all=[...document.querySelectorAll('.control')];const keys='123456789qwertyui';const i=keys.indexOf(e.key.toLowerCase());if(i>=0&&all[i])all[i].click()});addEventListener('resize',fitCabinet);document.fonts?.ready.then(fitCabinet);fitCabinet();
   })();
   </script>
 </body>

@@ -134,7 +134,7 @@ body{padding:22px 12px 70px;background:radial-gradient(ellipse at 50% -15%,#2333
 .coin-door{margin-left:auto;width:112px;padding:13px 12px;border:3px solid #050607;background:#11161b;box-shadow:inset 0 0 12px #000;color:#83929e;font:700 9px 'Orbitron';text-align:center;letter-spacing:.1em}.coin-slot{width:44px;height:12px;margin:0 auto 10px;border:3px solid #050607;border-radius:4px;background:#ff3355;box-shadow:0 0 10px #ff335588}.coin-return{width:58px;height:26px;margin:11px auto 0;border:3px inset #343d45;background:#080a0c}
 .cabinet-plaque{text-align:center;margin-top:13px;color:#697581;font:700 9px 'Orbitron';letter-spacing:.28em}.touch{padding:14px 0 0}.touch button{background:#16232d;border:2px solid #3d7186;box-shadow:0 4px 0 #070a0c}
 @media(max-width:760px){body{padding:8px 5px 48px}.cabinet{padding:11px 8px 24px;border-radius:28px 28px 10px 10px}.screen-bezel{padding:8px;border-width:5px}.screen-glass{padding:12px 2px 18px}.corner{top:118px;right:18px}.arcade-controls{gap:22px}.coin-door{display:none}.control-deck{padding-inline:12px}.deck-buttons{grid-template-columns:repeat(3,40px)}.deck-buttons i{width:40px}.joystick{transform:scale(.82)}}
-  .arcade-exit{position:fixed;top:14px;left:14px;z-index:99;display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font:900 12px 'Orbitron',monospace;letter-spacing:.08em;padding:10px 14px;border:2px solid #22e5ff;border-radius:6px;background:#04050df2;box-shadow:0 0 16px #22e5ff66}.arcade-exit:hover,.arcade-exit:focus{color:#04101c;background:#22e5ff;outline:2px solid #fff}
+  html{height:100%;overflow:hidden}body{height:100dvh;min-height:0;justify-content:center;padding:8px;overflow:hidden}.cabinet{position:absolute;top:50%;left:50%;transform-origin:center}.arcade-exit{position:fixed;top:14px;left:14px;z-index:99;display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font:900 12px 'Orbitron',monospace;letter-spacing:.08em;padding:10px 14px;border:2px solid #22e5ff;border-radius:6px;background:#04050df2;box-shadow:0 0 16px #22e5ff66}.arcade-exit:hover,.arcade-exit:focus{color:#04101c;background:#22e5ff;outline:2px solid #fff}
 </style>
 </head>
 <body>
@@ -910,6 +910,11 @@ function fit() {
   stage.style.transformOrigin = 'top center';
   holder.style.width = w * s + 'px';
   holder.style.height = h * s + 'px';
+  const cabinet = document.querySelector('.cabinet');
+  cabinet.style.transform = 'none';
+  const cabinetScale = Math.min(1, (innerWidth - 16) / cabinet.offsetWidth, (innerHeight - 48) / cabinet.offsetHeight);
+  cabinet.style.transform = `translate(-50%,-50%) scale(${cabinetScale})`;
+  cabinet.dataset.viewportScale = cabinetScale.toFixed(3);
 }
 window.addEventListener('resize', () => { fit(); resizeStars(); });
 
@@ -920,6 +925,7 @@ drawHold();
 drawNext();
 updateHud();
 fit();
+document.fonts?.ready.then(fit);
 requestAnimationFrame(loop);
 })();
 </script>

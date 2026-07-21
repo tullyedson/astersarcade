@@ -7,9 +7,9 @@
   <style>
     :root{--amber:#ffd56b;--cream:#fff4cb;--violet:#9e7bff;--rose:#ff739e;--night:#090b18}
     *{box-sizing:border-box}html,body{margin:0;min-height:100%}
-    body{display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 12%,#38405d,#15172b 45%,#070812 100%);color:var(--cream);font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}
+    body{display:grid;place-items:center;height:100dvh;min-height:0;padding:8px;background:radial-gradient(circle at 50% 12%,#38405d,#15172b 45%,#070812 100%);color:var(--cream);font-family:Georgia,"Times New Roman",serif;overflow:hidden}
     body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.26;background-image:radial-gradient(#ffd56b 0 1px,transparent 1.5px);background-size:71px 67px}
-    .cabinet{position:relative;width:min(960px,100%);padding:18px 20px 24px;border:7px solid #080812;border-radius:46px 46px 12px 12px;background:linear-gradient(100deg,#18192c,#4a465d 48%,#131426);box-shadow:0 0 0 3px #777083,0 30px 75px #000,inset 0 0 35px #000}
+    html{height:100%;overflow:hidden}.cabinet{position:absolute;top:50%;left:50%;width:min(960px,100%);padding:18px 20px 24px;border:7px solid #080812;border-radius:46px 46px 12px 12px;background:linear-gradient(100deg,#18192c,#4a465d 48%,#131426);box-shadow:0 0 0 3px #777083,0 30px 75px #000,inset 0 0 35px #000;transform-origin:center}
     .marquee{position:relative;margin:0 5% 15px;padding:10px;text-align:center;border:5px solid #141222;background:linear-gradient(90deg,#2a2450,#5e4162,#2a2450);color:var(--cream);font:900 clamp(29px,7vw,64px)/1 Georgia,serif;font-style:italic;letter-spacing:.06em;text-shadow:0 0 8px #fff,0 0 20px var(--amber),3px 3px #6d3765;box-shadow:inset 0 0 24px #ffd56b55,0 0 18px #ffd56b44}
     .marquee small{display:block;margin-top:6px;font:700 10px monospace;letter-spacing:.35em;color:var(--amber)}
     .lamp{position:absolute;right:5%;top:-25px;width:33px;height:31px;border-radius:50% 50% 20% 20%;background:var(--cream);box-shadow:0 0 10px #fff,0 0 28px var(--amber),0 0 55px var(--amber);transform:rotate(8deg)}.lamp:after{content:"";position:absolute;width:5px;height:28px;background:#7b6949;top:26px;left:14px}
@@ -57,7 +57,8 @@
     function loop(t){const dt=Math.min(.03,(t-last)/1000||0);last=t;update(dt);draw();requestAnimationFrame(loop)}
     function flap(){if(!running)return;moth.vy=-235;moth.wing+=1.4;sound(520,.025)}
     function setHold(v){if(v&&!holding)flap();holding=v;document.getElementById('wing').classList.toggle('on',v)}
-    addEventListener('keydown',e=>{if([' ','ArrowUp','w','W'].includes(e.key)){setHold(true);e.preventDefault()}});addEventListener('keyup',e=>{if([' ','ArrowUp','w','W'].includes(e.key)){setHold(false);e.preventDefault()}});c.addEventListener('pointerdown',e=>{e.preventDefault();setHold(true)});addEventListener('pointerup',()=>setHold(false));const wing=document.getElementById('wing');wing.addEventListener('pointerdown',e=>{e.preventDefault();setHold(true)});wing.addEventListener('pointerup',()=>setHold(false));wing.addEventListener('pointercancel',()=>setHold(false));document.getElementById('start').onclick=reset;requestAnimationFrame(loop);
+    function fitCabinet(){const cabinet=document.querySelector('.cabinet');cabinet.style.transform='none';const scale=Math.min(1,(innerWidth-16)/cabinet.offsetWidth,(innerHeight-16)/cabinet.offsetHeight);cabinet.style.transform=`translate(-50%,-50%) scale(${scale})`;cabinet.dataset.viewportScale=scale.toFixed(3)}
+    addEventListener('keydown',e=>{if([' ','ArrowUp','w','W'].includes(e.key)){setHold(true);e.preventDefault()}});addEventListener('keyup',e=>{if([' ','ArrowUp','w','W'].includes(e.key)){setHold(false);e.preventDefault()}});c.addEventListener('pointerdown',e=>{e.preventDefault();setHold(true)});addEventListener('pointerup',()=>setHold(false));const wing=document.getElementById('wing');wing.addEventListener('pointerdown',e=>{e.preventDefault();setHold(true)});wing.addEventListener('pointerup',()=>setHold(false));wing.addEventListener('pointercancel',()=>setHold(false));addEventListener('resize',fitCabinet);document.fonts?.ready.then(fitCabinet);document.getElementById('start').onclick=reset;fitCabinet();requestAnimationFrame(loop);
   })();
   </script>
 </body>
