@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Lumen Flight | Aster's Arcade</title>
+  <style>
+    :root{--amber:#ffd56b;--cream:#fff4cb;--violet:#9e7bff;--rose:#ff739e;--night:#090b18}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
+    body{display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 12%,#38405d,#15172b 45%,#070812 100%);color:var(--cream);font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.26;background-image:radial-gradient(#ffd56b 0 1px,transparent 1.5px);background-size:71px 67px}
+    .cabinet{position:relative;width:min(960px,100%);padding:18px 20px 24px;border:7px solid #080812;border-radius:46px 46px 12px 12px;background:linear-gradient(100deg,#18192c,#4a465d 48%,#131426);box-shadow:0 0 0 3px #777083,0 30px 75px #000,inset 0 0 35px #000}
+    .marquee{position:relative;margin:0 5% 15px;padding:10px;text-align:center;border:5px solid #141222;background:linear-gradient(90deg,#2a2450,#5e4162,#2a2450);color:var(--cream);font:900 clamp(29px,7vw,64px)/1 Georgia,serif;font-style:italic;letter-spacing:.06em;text-shadow:0 0 8px #fff,0 0 20px var(--amber),3px 3px #6d3765;box-shadow:inset 0 0 24px #ffd56b55,0 0 18px #ffd56b44}
+    .marquee small{display:block;margin-top:6px;font:700 10px monospace;letter-spacing:.35em;color:var(--amber)}
+    .lamp{position:absolute;right:5%;top:-25px;width:33px;height:31px;border-radius:50% 50% 20% 20%;background:var(--cream);box-shadow:0 0 10px #fff,0 0 28px var(--amber),0 0 55px var(--amber);transform:rotate(8deg)}.lamp:after{content:"";position:absolute;width:5px;height:28px;background:#7b6949;top:26px;left:14px}
+    .bezel{padding:12px;border:7px solid #080812;border-radius:18px;background:#1b1c2b}.screen{position:relative;overflow:hidden;border-radius:12px;background:#0a0b18;box-shadow:inset 0 0 60px #000}
+    canvas{display:block;width:100%;height:auto;aspect-ratio:850/600;touch-action:none}
+    .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#0003 3px 4px),radial-gradient(ellipse,transparent 60%,#000a)}
+    .hud{position:absolute;top:10px;left:14px;right:14px;display:flex;justify-content:space-between;color:var(--amber);font:700 14px monospace;text-shadow:0 0 8px var(--amber);pointer-events:none}
+    .overlay{position:absolute;inset:0;z-index:2;display:grid;place-items:center;padding:22px;text-align:center;background:#0b0c1bd9;backdrop-filter:blur(3px)}.overlay.hidden{display:none}.overlay h1{font-size:clamp(30px,7vw,62px);font-style:italic;margin:0;color:var(--cream);text-shadow:0 0 20px var(--amber)}.overlay p{max-width:590px;line-height:1.6;color:#d9d0e3}.overlay strong{color:var(--amber)}
+    button{padding:12px 22px;border:2px solid var(--cream);background:#7d527d;color:#fff;font:700 14px monospace;cursor:pointer;box-shadow:0 0 18px #9e7bff88}button:hover,button:focus{background:var(--amber);color:#211724;outline:2px solid #fff}
+    .deck{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:14px;padding:14px 5%;border:5px solid #0b0a13;background:linear-gradient(#696276,#282635);transform:perspective(450px) rotateX(3deg)}.instructions{font:700 12px/1.5 monospace;color:#ded6e6}.instructions b{color:var(--amber)}
+    .wing-button{width:94px;height:48px;border-radius:50%;border:6px solid #0d0b14;background:radial-gradient(ellipse at 40% 30%,#fff 0 5%,#ff739e 12% 45%,#7f294e 72%);box-shadow:0 7px #09080e,0 0 17px #ff739e77;color:#fff;font:900 12px monospace;touch-action:none}.wing-button:active,.wing-button.on{transform:translateY(5px);box-shadow:0 2px #09080e;background:var(--amber);color:#211724}
+    .back{position:fixed;top:12px;left:12px;z-index:6;color:#ffe7a3;text-decoration:none;font:700 12px monospace;padding:8px 10px;border:1px solid #ffd56b66;background:#080914cc}.back:hover,.back:focus{color:#fff;border-color:#fff}
+    @media(max-width:650px){body{padding:7px}.cabinet{padding:10px 7px 14px}.marquee{margin-inline:1%;letter-spacing:.02em}.bezel{padding:5px}.hud{font-size:10px}.deck{padding:10px}.instructions{font-size:10px}.back{position:absolute}}
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">&larr; ARCADE FLOOR</a>
+  <main class="cabinet">
+    <header class="marquee">LUMEN FLIGHT<small>TINY WINGS. UNREASONABLE CONFIDENCE.</small><i class="lamp" aria-hidden="true"></i></header>
+    <section class="bezel"><div class="screen">
+      <canvas id="game" width="850" height="600" aria-label="Lumen Flight moth game"></canvas>
+      <div class="hud"><span id="score">NECTAR 000</span><span id="distance">HALLWAY 0m</span><span id="hearts">HEARTS 3</span></div><div class="scan"></div>
+      <div class="overlay" id="overlay"><div><h1 id="title">LUMEN FLIGHT</h1><p id="message">Lumen has escaped her warm brass lamp to inspect the arcade after closing. Guide her through the mall, collect nectar, and avoid ceiling fans with deeply questionable safety guards.</p><p><strong>HOLD SPACE, UP, CLICK, or TOUCH</strong> to climb. Release to glide.</p><button id="start">OPEN THE LAMP</button></div></div>
+    </div></section>
+    <section class="deck"><div class="instructions"><b>CARE INSTRUCTIONS:</b> WARM LAMP, RIPE FRUIT, NO INDUSTRIAL FANS.<br>Lumen denies that this excursion requires supervision.</div><button class="wing-button" id="wing">FLAP</button></section>
+  </main>
+  <script>
+  (()=>{
+    const c=document.getElementById('game'),g=c.getContext('2d'),W=c.width,H=c.height;
+    const ui={score:document.getElementById('score'),distance:document.getElementById('distance'),hearts:document.getElementById('hearts'),overlay:document.getElementById('overlay'),title:document.getElementById('title'),message:document.getElementById('message')};
+    let moth={x:185,y:H/2,vy:0,r:16,wing:0},gates=[],nectar=[],sparks=[],score=0,distance=0,hearts=3,speed=180,running=false,holding=false,last=0,spawn=0,hitTime=0,audio;
+    function sound(f,d=.05,type='sine',v=.022){try{audio??=new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),a=audio.createGain();o.type=type;o.frequency.value=f;a.gain.value=v;o.connect(a);a.connect(audio.destination);o.start();a.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch{}}
+    function reset(){moth={x:185,y:H/2,vy:0,r:16,wing:0};gates=[];nectar=[];sparks=[];score=0;distance=0;hearts=3;speed=180;spawn=.8;hitTime=0;running=true;ui.overlay.classList.add('hidden');hud();sound(530,.12)}
+    function hud(){ui.score.textContent=`NECTAR ${String(score).padStart(3,'0')}`;ui.distance.textContent=`HALLWAY ${Math.floor(distance)}m`;ui.hearts.textContent=`HEARTS ${hearts}`}
+    function makeGate(){const gap=Math.max(145,215-distance*.04),center=100+gap/2+Math.random()*(H-200-gap);gates.push({x:W+50,w:64,center,gap,passed:false,phase:Math.random()*6});if(Math.random()<.85)nectar.push({x:W+82,y:center+(Math.random()-.5)*gap*.48,r:10,spin:0})}
+    function burst(x,y,color,n=12){for(let i=0;i<n;i++){const a=Math.random()*7,s=40+Math.random()*150;sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:.5+Math.random()*.4,color})}}
+    function hurt(){if(hitTime>0)return;hearts--;hitTime=1.8;moth.vy=120;burst(moth.x,moth.y,'#ff739e',22);sound(85,.3,'sawtooth',.04);hud();if(hearts<=0)finish()}
+    function finish(){running=false;const total=score*100+Math.floor(distance);const best=Math.max(total,Number(localStorage.getItem('lumenFlightHigh')||0));localStorage.setItem('lumenFlightHigh',best);ui.title.textContent='LAMP REQUIRED';ui.message.innerHTML=`NECTAR <strong>${score}</strong> &nbsp; DISTANCE <strong>${Math.floor(distance)}m</strong><br>FLIGHT SCORE <strong>${total}</strong> &nbsp; BEST <strong>${best}</strong><br><br>Lumen maintains that the third ceiling fan came out of nowhere.`;document.getElementById('start').textContent='ANOTHER EXCURSION';ui.overlay.classList.remove('hidden')}
+    function update(dt){if(!running)return;distance+=speed*dt/22;speed=Math.min(310,180+distance*.45);spawn-=dt;if(spawn<=0){makeGate();spawn=Math.max(.95,1.8-distance*.0015)}moth.vy+=(holding?-420:330)*dt;moth.vy=Math.max(-235,Math.min(260,moth.vy));moth.y+=moth.vy*dt;moth.wing+=dt*(holding?24:10);if(moth.y<moth.r+45||moth.y>H-moth.r-22)hurt();moth.y=Math.max(moth.r+40,Math.min(H-moth.r-18,moth.y));if(hitTime>0)hitTime-=dt;
+      gates.forEach(q=>{q.x-=speed*dt;q.phase+=dt*6;if(!q.passed&&q.x+q.w<moth.x){q.passed=true;distance+=6;sound(250,.035)}const inX=moth.x+moth.r>q.x&&moth.x-moth.r<q.x+q.w;if(inX&&(moth.y-moth.r<q.center-q.gap/2||moth.y+moth.r>q.center+q.gap/2))hurt()});gates=gates.filter(q=>q.x>-100);
+      nectar.forEach(n=>{n.x-=speed*dt;n.spin+=dt*5});for(let i=nectar.length-1;i>=0;i--){const n=nectar[i];if(n.x<-30){nectar.splice(i,1);continue}if(Math.hypot(moth.x-n.x,moth.y-n.y)<moth.r+n.r+3){score++;burst(n.x,n.y,'#ffd56b',10);nectar.splice(i,1);sound(760,.08);hud()}}sparks.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt});sparks=sparks.filter(p=>p.t>0);hud()}
+    function drawMoth(){if(hitTime>0&&Math.floor(hitTime*12)%2===0)return;g.save();g.translate(moth.x,moth.y);const flap=Math.sin(moth.wing)*.65;g.shadowColor='#ffd56b';g.shadowBlur=15;g.fillStyle='#e8d7a5';g.strokeStyle='#69573d';g.lineWidth=2;g.beginPath();g.ellipse(-12,-3,19,10+flap*5,-.45,0,7);g.fill();g.stroke();g.beginPath();g.ellipse(12,-3,19,10-flap*5,.45,0,7);g.fill();g.stroke();g.fillStyle='#493b31';g.beginPath();g.ellipse(0,2,7,16,0,0,7);g.fill();g.strokeStyle='#d8c178';g.beginPath();g.moveTo(-3,-11);g.quadraticCurveTo(-13,-25,-18,-18);g.moveTo(3,-11);g.quadraticCurveTo(13,-25,18,-18);g.stroke();g.restore()}
+    function fan(q,top){const edge=top?q.center-q.gap/2:q.center+q.gap/2;const h=top?edge:H-edge;g.save();g.translate(q.x+q.w/2,top?edge-26:edge+26);g.rotate(q.phase);g.fillStyle='#b8bdc7';g.shadowColor='#9e7bff';g.shadowBlur=10;for(let i=0;i<4;i++){g.rotate(Math.PI/2);g.fillRect(0,-6,42,12)}g.fillStyle='#4c5262';g.beginPath();g.arc(0,0,10,0,7);g.fill();g.restore();g.fillStyle='#252837';if(top)g.fillRect(q.x,40,q.w,Math.max(0,h-26));else g.fillRect(q.x,edge+52,q.w,Math.max(0,h-52));g.strokeStyle='#596174';g.strokeRect(q.x,top?40:edge+52,q.w,Math.max(0,top?h-26:h-52))}
+    function draw(){const grad=g.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#191b37');grad.addColorStop(.6,'#0c0e20');grad.addColorStop(1,'#252033');g.fillStyle=grad;g.fillRect(0,0,W,H);g.fillStyle='#ffd56b12';for(let i=0;i<8;i++){const x=(i*173-distance*9)%1000-80;g.beginPath();g.arc(x,80+(i%3)*145,45,0,7);g.fill()}g.fillStyle='#252432';g.fillRect(0,0,W,40);g.fillRect(0,H-18,W,18);gates.forEach(q=>{fan(q,true);fan(q,false)});nectar.forEach(n=>{g.save();g.translate(n.x,n.y);g.rotate(n.spin);g.shadowColor='#ffd56b';g.shadowBlur=16;g.fillStyle='#ffd56b';for(let i=0;i<5;i++){g.rotate(Math.PI*2/5);g.beginPath();g.ellipse(0,-8,4,8,0,0,7);g.fill()}g.fillStyle='#fff4cb';g.beginPath();g.arc(0,0,4,0,7);g.fill();g.restore()});sparks.forEach(p=>{g.globalAlpha=Math.max(0,p.t*1.8);g.fillStyle=p.color;g.fillRect(p.x,p.y,3,3)});g.globalAlpha=1;drawMoth()}
+    function loop(t){const dt=Math.min(.03,(t-last)/1000||0);last=t;update(dt);draw();requestAnimationFrame(loop)}
+    function setHold(v){holding=v;document.getElementById('wing').classList.toggle('on',v)}
+    addEventListener('keydown',e=>{if([' ','ArrowUp','w','W'].includes(e.key)){setHold(true);e.preventDefault()}});addEventListener('keyup',e=>{if([' ','ArrowUp','w','W'].includes(e.key)){setHold(false);e.preventDefault()}});c.addEventListener('pointerdown',e=>{e.preventDefault();setHold(true)});addEventListener('pointerup',()=>setHold(false));const wing=document.getElementById('wing');wing.addEventListener('pointerdown',e=>{e.preventDefault();setHold(true)});wing.addEventListener('pointerup',()=>setHold(false));wing.addEventListener('pointercancel',()=>setHold(false));document.getElementById('start').onclick=reset;requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>

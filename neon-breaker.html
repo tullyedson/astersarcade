@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Neon Breaker | Aster's Arcade</title>
+  <style>
+    :root{--hot:#ff3fa4;--cyan:#42f4ff;--lime:#b9ff4f;--gold:#ffcb4b;--ink:#07040e}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
+    body{display:grid;place-items:center;padding:18px;background:linear-gradient(180deg,#160823,#07040e 65%);color:#fff;font-family:"Trebuchet MS",Arial,sans-serif;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 49.7%,#42f4ff12 50%,transparent 50.3%),linear-gradient(transparent 49.7%,#ff3fa412 50%,transparent 50.3%);background-size:52px 52px;transform:perspective(400px) rotateX(62deg) scale(2);transform-origin:bottom;opacity:.7}
+    .cabinet{position:relative;width:min(940px,100%);padding:18px 20px 25px;border:7px solid #050309;border-radius:28px 28px 10px 10px;background:linear-gradient(105deg,#25122d,#5f2952 48%,#1c1028);box-shadow:0 0 0 3px #8d4f82,0 30px 75px #000,inset 0 0 35px #000}
+    .marquee{text-align:center;margin:0 5% 14px;padding:10px;border:4px solid #120716;background:#180b2a;color:#fff;font:900 clamp(30px,7vw,66px)/1 "Arial Black",Arial,sans-serif;font-style:italic;letter-spacing:.08em;text-shadow:3px 3px 0 #7c1655,-3px -3px 0 #126b76,0 0 18px #fff;box-shadow:inset 0 0 25px #ff3fa477,0 0 20px #ff3fa455}
+    .bezel{padding:12px;border:7px solid #08050d;border-radius:18px;background:#1c1027}.screen{position:relative;overflow:hidden;border-radius:10px;background:#05020a;box-shadow:inset 0 0 50px #000}
+    canvas{display:block;width:100%;height:auto;aspect-ratio:800/650;touch-action:none;cursor:none}
+    .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#0004 3px 4px),radial-gradient(ellipse,transparent 60%,#000b)}
+    .hud{position:absolute;left:14px;right:14px;top:10px;display:flex;justify-content:space-between;color:var(--cyan);font:700 15px monospace;text-shadow:0 0 7px var(--cyan);pointer-events:none}
+    .overlay{position:absolute;inset:0;z-index:2;display:grid;place-items:center;padding:22px;text-align:center;background:#090411d9}.overlay.hidden{display:none}.overlay h1{font:900 clamp(26px,6vw,54px)/1 Arial,sans-serif;color:#fff;text-shadow:0 0 16px var(--hot);margin:0}.overlay p{max-width:590px;line-height:1.55;color:#d4bed8}.overlay strong{color:var(--lime)}
+    .start{padding:12px 23px;border:2px solid #fff;background:var(--hot);color:#fff;font:900 14px monospace;cursor:pointer;box-shadow:0 0 18px var(--hot)}.start:hover,.start:focus{background:#fff;color:#330b28;outline:2px solid var(--cyan)}
+    .deck{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin-top:14px;padding:15px 5%;border:5px solid #09050d;background:linear-gradient(#6b4964,#25192a);transform:perspective(450px) rotateX(3deg)}
+    .hint{font:700 12px/1.5 monospace;color:#e5cce4}.hint b{color:var(--gold)}.knob{justify-self:center;width:58px;height:58px;border-radius:50%;border:7px solid #09060d;background:radial-gradient(circle at 35% 30%,#fff 0 5%,#42f4ff 7% 30%,#17616a 62%,#08252b);box-shadow:0 7px #08050b,0 0 18px #42f4ff88}.buttons{justify-self:end;display:flex;gap:11px}.button{width:48px;height:34px;border-radius:50%;border:5px solid #100711;background:var(--hot);box-shadow:0 6px #090409,0 0 14px #ff3fa477}.button:nth-child(2){background:var(--lime);box-shadow:0 6px #090409,0 0 14px #b9ff4f77}
+    .back{position:fixed;top:12px;left:12px;z-index:6;color:#90f7ff;text-decoration:none;font:700 12px monospace;padding:8px 10px;border:1px solid #42f4ff55;background:#08040dcc}.back:hover,.back:focus{color:#fff;border-color:#fff}
+    @media(max-width:650px){body{padding:7px}.cabinet{padding:10px 7px 14px}.marquee{margin-inline:1%;letter-spacing:.03em}.bezel{padding:5px}.hud{font-size:10px}.deck{padding:10px;grid-template-columns:1fr auto}.hint:last-of-type{display:none}.buttons{display:none}.back{position:absolute}}
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">&larr; ARCADE FLOOR</a>
+  <main class="cabinet">
+    <header class="marquee">NEON BREAKER</header>
+    <section class="bezel"><div class="screen">
+      <canvas id="game" width="800" height="650" aria-label="Neon Breaker brick game"></canvas>
+      <div class="hud"><span id="score">SCORE 000000</span><span id="level">WALL 1</span><span id="lives">BALLS 3</span></div><div class="scan"></div>
+      <div class="overlay" id="overlay"><div><h1 id="title">NEON BREAKER</h1><p id="message">The wall has been making assumptions about its continued structural integrity.</p><p><strong>MOVE:</strong> mouse, touch, arrows, or A and D. <strong>LAUNCH:</strong> click, tap, or space.</p><button class="start" id="start">INSERT TOKEN</button></div></div>
+    </div></section>
+    <section class="deck"><div class="hint"><b>BREAK EVERYTHING.</b><br>Catch falling capsules for legally distinct advantages.</div><div class="knob" aria-hidden="true"></div><div class="buttons" aria-hidden="true"><i class="button"></i><i class="button"></i></div></section>
+  </main>
+  <script>
+  (()=>{
+    const c=document.getElementById('game'),g=c.getContext('2d'),W=c.width,H=c.height;
+    const ui={score:document.getElementById('score'),level:document.getElementById('level'),lives:document.getElementById('lives'),overlay:document.getElementById('overlay'),title:document.getElementById('title'),message:document.getElementById('message')};
+    const colors=['#42f4ff','#986cff','#ff3fa4','#ff725e','#ffcb4b','#b9ff4f'];let paddle={x:W/2,y:H-40,w:110,h:14,speed:520,wide:0},balls=[],bricks=[],drops=[],bursts=[],score=0,level=1,lives=3,running=false,last=0,left=false,right=false,audio;
+    function sound(f,d=.05,type='square',v=.025){try{audio??=new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),a=audio.createGain();o.type=type;o.frequency.value=f;a.gain.value=v;o.connect(a);a.connect(audio.destination);o.start();a.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch{}}
+    function build(){const rows=Math.min(9,5+level),cols=11,gap=6,bw=(W-80-gap*(cols-1))/cols,bh=22;bricks=[];for(let r=0;r<rows;r++)for(let col=0;col<cols;col++){const armor=level>2&&r<Math.floor(level/3)&&((r+col)%3===0)?2:1;bricks.push({x:40+col*(bw+gap),y:74+r*(bh+gap),w:bw,h:bh,hp:armor,max:armor,color:colors[r%colors.length]})}}
+    function newBall(stuck=true){return{x:paddle.x,y:paddle.y-18,vx:(Math.random()>.5?1:-1)*210,vy:-330,r:7,stuck}}
+    function reset(){paddle={x:W/2,y:H-40,w:110,h:14,speed:520,wide:0};score=0;level=1;lives=3;balls=[newBall()];drops=[];bursts=[];build();running=true;ui.overlay.classList.add('hidden');hud();sound(300,.1)}
+    function hud(){ui.score.textContent=`SCORE ${String(score).padStart(6,'0')}`;ui.level.textContent=`WALL ${level}`;ui.lives.textContent=`BALLS ${lives}`}
+    function launch(){if(!running)return;balls.forEach(b=>b.stuck=false);sound(440,.05)}
+    function particles(x,y,color,n=8){for(let i=0;i<n;i++)bursts.push({x,y,vx:(Math.random()-.5)*220,vy:(Math.random()-.5)*180,t:.45,color})}
+    function capsule(x,y){if(Math.random()<.16)drops.push({x,y,vy:105,r:10,type:['WIDE','MULTI','LIFE'][Math.floor(Math.random()*3)]})}
+    function applyDrop(d){if(d.type==='WIDE'){paddle.w=170;paddle.wide=10}else if(d.type==='MULTI'){const src=balls[0];if(src)for(const s of [-1,1])balls.push({...src,vx:Math.abs(src.vx)*s,vy:-Math.abs(src.vy),stuck:false})}else{lives++;hud()}score+=250;sound(760,.15,'sine');particles(d.x,d.y,'#fff',18)}
+    function circleRect(b,r){const nx=Math.max(r.x,Math.min(b.x,r.x+r.w)),ny=Math.max(r.y,Math.min(b.y,r.y+r.h));return Math.hypot(b.x-nx,b.y-ny)<b.r}
+    function finish(){running=false;const best=Math.max(score,Number(localStorage.getItem('neonBreakerHigh')||0));localStorage.setItem('neonBreakerHigh',best);ui.title.textContent='WALL WINS';ui.message.innerHTML=`FINAL SCORE <strong>${score}</strong><br>BEST DAMAGE <strong>${best}</strong><br><br>The wall has issued a deeply premature victory statement.`;document.getElementById('start').textContent='ANOTHER TOKEN';ui.overlay.classList.remove('hidden');sound(70,.4,'sawtooth')}
+    function tick(dt){if(!running)return;if(left)paddle.x-=paddle.speed*dt;if(right)paddle.x+=paddle.speed*dt;paddle.x=Math.max(paddle.w/2,Math.min(W-paddle.w/2,paddle.x));if(paddle.wide>0){paddle.wide-=dt;if(paddle.wide<=0)paddle.w=110}
+      balls.forEach(b=>{if(b.stuck){b.x=paddle.x;b.y=paddle.y-18;return}b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<b.r){b.x=b.r;b.vx=Math.abs(b.vx);sound(180)}if(b.x>W-b.r){b.x=W-b.r;b.vx=-Math.abs(b.vx);sound(180)}if(b.y<48+b.r){b.y=48+b.r;b.vy=Math.abs(b.vy);sound(210)}const pr={x:paddle.x-paddle.w/2,y:paddle.y-paddle.h/2,w:paddle.w,h:paddle.h};if(b.vy>0&&circleRect(b,pr)){b.y=pr.y-b.r;b.vy=-Math.abs(b.vy);b.vx+=((b.x-paddle.x)/(paddle.w/2))*180;const speed=Math.hypot(b.vx,b.vy),cap=590;if(speed>cap){b.vx*=cap/speed;b.vy*=cap/speed}sound(350,.04)}for(const br of bricks){if(br.hp>0&&circleRect(b,br)){const ox=Math.min(Math.abs(b.x-br.x),Math.abs(b.x-(br.x+br.w))),oy=Math.min(Math.abs(b.y-br.y),Math.abs(b.y-(br.y+br.h)));if(ox<oy)b.vx*=-1;else b.vy*=-1;br.hp--;score+=br.hp?20:100;if(!br.hp){particles(br.x+br.w/2,br.y+br.h/2,br.color);capsule(br.x+br.w/2,br.y+br.h/2)}sound(br.hp?110:520,.045);hud();break}}});balls=balls.filter(b=>b.y<H+30);if(!balls.length){lives--;hud();if(lives<=0){finish();return}balls=[newBall()];sound(90,.25)}
+      drops.forEach(d=>{d.y+=d.vy*dt});for(let i=drops.length-1;i>=0;i--){const d=drops[i];if(d.y>H){drops.splice(i,1);continue}if(Math.abs(d.x-paddle.x)<paddle.w/2+d.r&&Math.abs(d.y-paddle.y)<18){applyDrop(d);drops.splice(i,1)}}bursts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=160*dt;p.t-=dt});bursts=bursts.filter(p=>p.t>0);
+      if(bricks.every(b=>b.hp<=0)){level++;build();balls=[newBall()];drops=[];score+=1000;hud();sound(660,.12);setTimeout(()=>sound(880,.15),110)}}
+    function draw(){g.fillStyle='#05020a';g.fillRect(0,0,W,H);const grad=g.createLinearGradient(0,48,0,H);grad.addColorStop(0,'#140725');grad.addColorStop(1,'#030108');g.fillStyle=grad;g.fillRect(0,48,W,H-48);g.strokeStyle='#42f4ff18';g.lineWidth=1;for(let y=50;y<H;y+=40){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()}bricks.forEach(b=>{if(b.hp<=0)return;g.fillStyle=b.hp===2?'#fff':b.color;g.shadowColor=b.color;g.shadowBlur=13;g.fillRect(b.x,b.y,b.w,b.h);g.fillStyle='#ffffff55';g.fillRect(b.x+3,b.y+3,b.w-6,3)});g.shadowBlur=15;g.fillStyle='#42f4ff';g.fillRect(paddle.x-paddle.w/2,paddle.y-paddle.h/2,paddle.w,paddle.h);g.fillStyle='#fff';balls.forEach(b=>{g.shadowColor='#fff';g.beginPath();g.arc(b.x,b.y,b.r,0,7);g.fill()});drops.forEach(d=>{g.shadowColor=d.type==='WIDE'?'#42f4ff':d.type==='MULTI'?'#ff3fa4':'#b9ff4f';g.fillStyle=g.shadowColor;g.beginPath();g.arc(d.x,d.y,d.r,0,7);g.fill();g.shadowBlur=0;g.fillStyle='#16031a';g.textAlign='center';g.font='bold 9px monospace';g.fillText(d.type[0],d.x,d.y+3)});bursts.forEach(p=>{g.globalAlpha=Math.max(0,p.t*2);g.fillStyle=p.color;g.fillRect(p.x,p.y,4,4)});g.globalAlpha=1;g.shadowBlur=0}
+    function loop(t){const dt=Math.min(.03,(t-last)/1000||0);last=t;tick(dt);draw();requestAnimationFrame(loop)}
+    const move=e=>{const r=c.getBoundingClientRect();paddle&&(paddle.x=(e.clientX-r.left)/r.width*W)};c.addEventListener('pointermove',move);c.addEventListener('pointerdown',e=>{move(e);launch()});
+    addEventListener('keydown',e=>{if(['ArrowLeft','a','A'].includes(e.key)){left=true;e.preventDefault()}if(['ArrowRight','d','D'].includes(e.key)){right=true;e.preventDefault()}if(e.key===' '){launch();e.preventDefault()}});addEventListener('keyup',e=>{if(['ArrowLeft','a','A'].includes(e.key))left=false;if(['ArrowRight','d','D'].includes(e.key))right=false});
+    document.getElementById('start').onclick=reset;requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Star Drift | Aster's Arcade</title>
+  <style>
+    :root{--cyan:#5df6ff;--pink:#ff4fba;--gold:#ffd45e;--ink:#03040b;--glass:#101629}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
+    body{display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 18%,#252055 0,#090918 42%,#020307 100%);color:#eefcff;font-family:"Courier New",monospace;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#fff 0 1px,transparent 1.5px),radial-gradient(#8ef 0 1px,transparent 1.5px);background-size:53px 61px,97px 89px;background-position:7px 13px,31px 47px;opacity:.38}
+    .cabinet{position:relative;width:min(1040px,100%);padding:16px 18px 22px;border:6px solid #05060c;border-radius:34px 34px 10px 10px;background:linear-gradient(110deg,#101322,#31354e 48%,#0c0f1c);box-shadow:0 0 0 3px #4e5870,0 30px 70px #000,inset 0 0 38px #000}
+    .marquee{margin:0 5% 14px;padding:9px 12px;text-align:center;border:4px solid #070811;background:linear-gradient(90deg,#10274e,#4f1762,#10274e);font:900 clamp(30px,7vw,68px)/1 Arial,sans-serif;letter-spacing:.15em;color:#fff;text-shadow:0 0 5px #fff,0 0 14px var(--cyan),4px 3px #602171;box-shadow:0 0 22px #5df6ff55}
+    .bezel{padding:12px;border:7px solid #05060a;border-radius:18px;background:#151827;box-shadow:inset 0 0 18px #000}
+    .screen{position:relative;overflow:hidden;border-radius:12px;background:#02040a;box-shadow:inset 0 0 55px #000,0 0 18px #5df6ff33}
+    canvas{display:block;width:100%;height:auto;aspect-ratio:900/620;touch-action:none}
+    .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#0005 3px 4px),radial-gradient(ellipse,transparent 55%,#000b)}
+    .hud{position:absolute;inset:12px 14px auto;display:flex;justify-content:space-between;color:var(--cyan);font-weight:bold;text-shadow:0 0 8px var(--cyan);pointer-events:none}
+    .overlay{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#030511cc;backdrop-filter:blur(3px);z-index:3}
+    .overlay.hidden{display:none}.overlay h1{margin:0;color:#fff;font-size:clamp(26px,6vw,56px);text-shadow:0 0 18px var(--pink)}.overlay p{max-width:620px;line-height:1.5;color:#b7c8df}.overlay strong{color:var(--gold)}
+    button{font:700 14px "Courier New",monospace;color:#071018;background:var(--cyan);border:0;border-radius:4px;padding:12px 20px;cursor:pointer;box-shadow:0 0 18px #5df6ff88}button:hover,button:focus{background:#fff;outline:2px solid var(--pink)}
+    .deck{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:13px;padding:13px 4%;border:5px solid #07080d;background:linear-gradient(#4a5063,#151824);transform:perspective(420px) rotateX(3deg)}
+    .instructions{color:#aab3c7;font-size:12px;line-height:1.5}.instructions b{color:var(--gold)}.controls{display:flex;gap:9px}.control{min-width:58px;min-height:48px;padding:8px 11px;color:#fff;background:#24283a;border:3px solid #090a10;border-radius:10px;box-shadow:0 5px #08090e,0 0 10px #000;font-size:17px;touch-action:none}.control.fire{background:#8e245e}.control:active,.control.on{transform:translateY(4px);box-shadow:0 1px #000;background:var(--pink)}
+    .back{position:fixed;top:12px;left:12px;z-index:8;color:#aaf7ff;text-decoration:none;font:700 12px monospace;padding:8px 10px;border:1px solid #5df6ff55;background:#03050ccc}.back:focus,.back:hover{color:#fff;border-color:#fff}
+    @media(max-width:700px){body{padding:8px}.cabinet{padding:10px 8px 14px}.marquee{margin-inline:2%;letter-spacing:.08em}.bezel{padding:6px}.hud{font-size:11px}.deck{display:block}.instructions{text-align:center;margin-bottom:10px}.controls{justify-content:center}.control{min-width:49px}.back{position:absolute}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">&larr; ARCADE FLOOR</a>
+  <main class="cabinet">
+    <header class="marquee">STAR DRIFT</header>
+    <section class="bezel">
+      <div class="screen">
+        <canvas id="game" width="900" height="620" aria-label="Star Drift asteroid game"></canvas>
+        <div class="hud"><span id="score">SCORE 000000</span><span id="wave">WAVE 1</span><span id="lives">SHIPS 3</span></div>
+        <div class="scan"></div>
+        <div class="overlay" id="overlay"><div><h1 id="title">STAR DRIFT</h1><p id="message">Clear the debris belt. Your ship wraps around the screen because space has no respect for cabinet dimensions.</p><p><strong>ARROWS or WASD</strong> steer, <strong>SPACE</strong> fires, <strong>P</strong> pauses.</p><button id="start">INSERT TOKEN</button></div></div>
+      </div>
+    </section>
+    <section class="deck">
+      <div class="instructions"><b>MISSION:</b> REMOVE SUSPICIOUSLY POLYGONAL SPACE ROCKS<br>High score is remembered locally. Physics is remembered selectively.</div>
+      <div class="controls" aria-label="Touch controls">
+        <button class="control" data-key="left" aria-label="Turn left">&#8634;</button>
+        <button class="control" data-key="thrust" aria-label="Thrust">&#9650;</button>
+        <button class="control" data-key="right" aria-label="Turn right">&#8635;</button>
+        <button class="control fire" data-key="fire" aria-label="Fire">FIRE</button>
+      </div>
+    </section>
+  </main>
+  <script>
+  (()=>{
+    const c=document.getElementById('game'),x=c.getContext('2d'),W=c.width,H=c.height;
+    const ui={score:document.getElementById('score'),wave:document.getElementById('wave'),lives:document.getElementById('lives'),overlay:document.getElementById('overlay'),title:document.getElementById('title'),message:document.getElementById('message')};
+    const keys={left:false,right:false,thrust:false,fire:false};let ship={x:W/2,y:H/2,a:-Math.PI/2,vx:0,vy:0,r:14},rocks=[],shots=[],particles=[],score=0,wave=1,lives=3,last=0,running=false,paused=false,fireLock=false,invincible=0,audio;
+    const rnd=(a,b)=>a+Math.random()*(b-a),wrap=(o,r=0)=>{if(o.x<-r)o.x=W+r;if(o.x>W+r)o.x=-r;if(o.y<-r)o.y=H+r;if(o.y>H+r)o.y=-r};
+    function sound(freq,d=.05,type='square',vol=.025){try{audio??=new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch{}}
+    function newShip(){return{x:W/2,y:H/2,a:-Math.PI/2,vx:0,vy:0,r:14}}
+    function rock(size,xp,yp){const r=size===3?48:size===2?29:17,pts=Array.from({length:10},(_,i)=>({a:i*Math.PI/5,m:rnd(.72,1.18)}));return{x:xp??rnd(0,W),y:yp??rnd(0,H),vx:rnd(-55,55)*(4-size)/2,vy:rnd(-55,55)*(4-size)/2,a:rnd(0,6),spin:rnd(-.7,.7),r,size,pts}}
+    function safeRock(size){let r;do{r=rock(size)}while(Math.hypot(r.x-W/2,r.y-H/2)<180);return r}
+    function reset(){ship=newShip();rocks=Array.from({length:4},()=>safeRock(3));shots=[];particles=[];score=0;wave=1;lives=3;invincible=2.5;running=true;paused=false;ui.overlay.classList.add('hidden');updateHud();sound(330,.12,'sawtooth')}
+    function updateHud(){ui.score.textContent=`SCORE ${String(score).padStart(6,'0')}`;ui.wave.textContent=`WAVE ${wave}`;ui.lives.textContent=`SHIPS ${lives}`}
+    function burst(px,py,color='#5df6ff',n=12){for(let i=0;i<n;i++){const a=rnd(0,Math.PI*2),s=rnd(30,170);particles.push({x:px,y:py,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:rnd(.3,.8),color})}}
+    function collide(a,b){return Math.hypot(a.x-b.x,a.y-b.y)<a.r+b.r}
+    function shoot(){if(fireLock)return;fireLock=true;shots.push({x:ship.x+Math.cos(ship.a)*19,y:ship.y+Math.sin(ship.a)*19,vx:ship.vx+Math.cos(ship.a)*410,vy:ship.vy+Math.sin(ship.a)*410,r:3,t:1.15});sound(620,.045)}
+    function hitRock(index){const r=rocks[index];score+=r.size===3?20:r.size===2?50:100;burst(r.x,r.y,r.size===1?'#ffd45e':'#ff4fba',8+r.size*4);rocks.splice(index,1);if(r.size>1)for(let i=0;i<2;i++){const n=rock(r.size-1,r.x,r.y);n.vx+=r.vx;n.vy+=r.vy;rocks.push(n)}sound(90+r.size*45,.12,'sawtooth');updateHud()}
+    function loseShip(){if(invincible>0)return;lives--;burst(ship.x,ship.y,'#fff',28);sound(55,.45,'sawtooth',.05);updateHud();if(lives<=0){finish();return}ship=newShip();invincible=2.6}
+    function finish(){running=false;const best=Math.max(score,Number(localStorage.getItem('starDriftHigh')||0));localStorage.setItem('starDriftHigh',best);ui.title.textContent='SHIP LOST';ui.message.innerHTML=`FINAL SCORE <strong>${score}</strong><br>BEST DRIFT <strong>${best}</strong><br><br>The debris belt remains extremely smug.`;document.getElementById('start').textContent='ANOTHER TOKEN';ui.overlay.classList.remove('hidden')}
+    function nextWave(){wave++;invincible=2;rocks=Array.from({length:Math.min(10,3+wave)},()=>safeRock(3));sound(250,.1);setTimeout(()=>sound(410,.1),100);updateHud()}
+    function update(dt){if(!running||paused)return;if(keys.left)ship.a-=3.7*dt;if(keys.right)ship.a+=3.7*dt;if(keys.thrust){ship.vx+=Math.cos(ship.a)*190*dt;ship.vy+=Math.sin(ship.a)*190*dt;if(Math.random()<.65)particles.push({x:ship.x-Math.cos(ship.a)*15,y:ship.y-Math.sin(ship.a)*15,vx:ship.vx-Math.cos(ship.a)*rnd(80,150),vy:ship.vy-Math.sin(ship.a)*rnd(80,150),t:.28,color:'#ffd45e'})}ship.vx*=Math.pow(.995,dt*60);ship.vy*=Math.pow(.995,dt*60);ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;wrap(ship,ship.r);if(keys.fire)shoot();else fireLock=false;if(invincible>0)invincible-=dt;
+      shots.forEach(s=>{s.x+=s.vx*dt;s.y+=s.vy*dt;s.t-=dt;wrap(s)});shots=shots.filter(s=>s.t>0);rocks.forEach(r=>{r.x+=r.vx*dt;r.y+=r.vy*dt;r.a+=r.spin*dt;wrap(r,r.r)});particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt});particles=particles.filter(p=>p.t>0);
+      for(let si=shots.length-1;si>=0;si--){for(let ri=rocks.length-1;ri>=0;ri--){if(collide(shots[si],rocks[ri])){shots.splice(si,1);hitRock(ri);break}}}for(const r of rocks)if(collide(ship,r)){loseShip();break}if(!rocks.length)nextWave()}
+    function drawShip(){if(invincible>0&&Math.floor(invincible*10)%2===0)return;x.save();x.translate(ship.x,ship.y);x.rotate(ship.a);x.strokeStyle='#fff';x.shadowColor='#5df6ff';x.shadowBlur=12;x.lineWidth=2;x.beginPath();x.moveTo(19,0);x.lineTo(-13,-11);x.lineTo(-7,0);x.lineTo(-13,11);x.closePath();x.stroke();if(keys.thrust){x.strokeStyle='#ffd45e';x.beginPath();x.moveTo(-9,-5);x.lineTo(-23,0);x.lineTo(-9,5);x.stroke()}x.restore()}
+    function draw(){x.fillStyle='#02040a';x.fillRect(0,0,W,H);x.fillStyle='#ffffff88';for(let i=0;i<75;i++){const sx=(i*137+17)%W,sy=(i*79+33)%H;x.fillRect(sx,sy,i%7===0?2:1,i%7===0?2:1)}rocks.forEach(r=>{x.save();x.translate(r.x,r.y);x.rotate(r.a);x.strokeStyle='#d7e9ff';x.shadowColor='#ff4fba';x.shadowBlur=8;x.lineWidth=2;x.beginPath();r.pts.forEach((p,i)=>{const px=Math.cos(p.a)*r.r*p.m,py=Math.sin(p.a)*r.r*p.m;i?x.lineTo(px,py):x.moveTo(px,py)});x.closePath();x.stroke();x.restore()});x.fillStyle='#5df6ff';x.shadowColor='#5df6ff';x.shadowBlur=10;shots.forEach(s=>{x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill()});particles.forEach(p=>{x.globalAlpha=Math.max(0,p.t*2);x.fillStyle=p.color;x.fillRect(p.x,p.y,3,3)});x.globalAlpha=1;x.shadowBlur=0;if(ship)drawShip();if(paused){x.fillStyle='#000b';x.fillRect(0,0,W,H);x.fillStyle='#fff';x.textAlign='center';x.font='bold 42px Courier New';x.fillText('PAUSED',W/2,H/2)}}
+    function loop(t){const dt=Math.min(.035,(t-last)/1000||0);last=t;update(dt);draw();requestAnimationFrame(loop)}
+    const map={ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',ArrowUp:'thrust',w:'thrust',W:'thrust',' ':'fire'};
+    addEventListener('keydown',e=>{if(map[e.key]){keys[map[e.key]]=true;e.preventDefault()}if(e.key.toLowerCase()==='p'&&running){paused=!paused;sound(paused?120:260,.08)}});addEventListener('keyup',e=>{if(map[e.key]){keys[map[e.key]]=false;e.preventDefault()}});
+    document.querySelectorAll('[data-key]').forEach(b=>{const k=b.dataset.key,on=e=>{e.preventDefault();keys[k]=true;b.classList.add('on')},off=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on');if(k==='fire')fireLock=false};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off)});
+    document.getElementById('start').onclick=reset;requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>
