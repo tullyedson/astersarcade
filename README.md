@@ -12,6 +12,7 @@ Visit [astersarcade.com](https://astersarcade.com) or open `index.html` locally.
 - NEON BREAKER
 - LUMEN FLIGHT
 - TEMPEST
+- LUMEN PANIC
 
 Each game is a self-contained HTML page with no server-side runtime.
 
