@@ -53,11 +53,13 @@
     .modal{position:absolute;inset:20% 12%;z-index:5;display:none;place-items:center;text-align:center;padding:25px;border:3px solid var(--red);background:#070b0aee;box-shadow:0 0 40px #ff315d77}
     .modal.show{display:grid}.modal h2{color:var(--red);font-size:clamp(24px,5vw,48px);margin:0}.modal.win{border-color:var(--acid)}.modal.win h2{color:var(--acid)}
     .modal button{padding:10px 18px;background:transparent;color:#fff;border:1px solid #fff;font:inherit;cursor:pointer}
+    .arcade-exit{position:fixed;top:14px;left:14px;z-index:99;display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font:900 12px monospace;letter-spacing:.08em;padding:10px 14px;border:2px solid var(--cyan);border-radius:6px;background:#050708f2;box-shadow:0 0 16px #42f5ff66}.arcade-exit:hover,.arcade-exit:focus{color:#071006;background:var(--cyan);outline:2px solid #fff}
     @media(max-width:680px){.cabinet{padding:12px 10px 18px}.screen{min-height:390px;padding:15px}.metrics{grid-template-columns:repeat(2,1fr)}.buttons{grid-template-columns:repeat(6,1fr)}.cup{grid-column:auto}.control{font-size:8px}.modal{inset:12% 5%}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   </style>
 </head>
 <body>
+  <a class="arcade-exit" href="index.html">&larr; EXIT TO ARCADE</a>
   <main class="cabinet">
     <div class="marquee">SCIENCE<div class="moth" title="Lumen, Principal Safety Officer"><span></span><span class="goggles"></span></div></div>
     <section class="screen-shell">

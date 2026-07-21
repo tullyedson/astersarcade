@@ -21,13 +21,13 @@
     button{font:700 14px "Courier New",monospace;color:#071018;background:var(--cyan);border:0;border-radius:4px;padding:12px 20px;cursor:pointer;box-shadow:0 0 18px #5df6ff88}button:hover,button:focus{background:#fff;outline:2px solid var(--pink)}
     .deck{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:13px;padding:13px 4%;border:5px solid #07080d;background:linear-gradient(#4a5063,#151824);transform:perspective(420px) rotateX(3deg)}
     .instructions{color:#aab3c7;font-size:12px;line-height:1.5}.instructions b{color:var(--gold)}.controls{display:flex;gap:9px}.control{min-width:58px;min-height:48px;padding:8px 11px;color:#fff;background:#24283a;border:3px solid #090a10;border-radius:10px;box-shadow:0 5px #08090e,0 0 10px #000;font-size:17px;touch-action:none}.control.fire{background:#8e245e}.control:active,.control.on{transform:translateY(4px);box-shadow:0 1px #000;background:var(--pink)}
-    .back{position:fixed;top:12px;left:12px;z-index:8;color:#aaf7ff;text-decoration:none;font:700 12px monospace;padding:8px 10px;border:1px solid #5df6ff55;background:#03050ccc}.back:focus,.back:hover{color:#fff;border-color:#fff}
-    @media(max-width:700px){body{padding:8px}.cabinet{padding:10px 8px 14px}.marquee{margin-inline:2%;letter-spacing:.08em}.bezel{padding:6px}.hud{font-size:11px}.deck{display:block}.instructions{text-align:center;margin-bottom:10px}.controls{justify-content:center}.control{min-width:49px}.back{position:absolute}}
+    .arcade-exit{position:fixed;top:14px;left:14px;z-index:99;display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font:900 12px monospace;letter-spacing:.08em;padding:10px 14px;border:2px solid var(--cyan);border-radius:6px;background:#03050cf2;box-shadow:0 0 16px #5df6ff66}.arcade-exit:focus,.arcade-exit:hover{color:#071018;background:var(--cyan);outline:2px solid #fff}
+    @media(max-width:700px){body{padding:8px}.cabinet{padding:10px 8px 14px}.marquee{margin-inline:2%;letter-spacing:.08em}.bezel{padding:6px}.hud{font-size:11px}.deck{display:block}.instructions{text-align:center;margin-bottom:10px}.controls{justify-content:center}.control{min-width:49px}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
 <body>
-  <a class="back" href="index.html">&larr; ARCADE FLOOR</a>
+  <a class="arcade-exit" href="index.html">&larr; EXIT TO ARCADE</a>
   <main class="cabinet">
     <header class="marquee">STAR DRIFT</header>
     <section class="bezel">
