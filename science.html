@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SCIENCE</title>
+  <style>
+    :root{--acid:#baff29;--cyan:#42f5ff;--amber:#ffbf3f;--red:#ff315d;--ink:#050708;--steel:#182024}
+    *{box-sizing:border-box}html,body{min-height:100%;margin:0}
+    body{display:grid;place-items:center;overflow-x:hidden;background:
+      radial-gradient(circle at 50% 10%,#253137 0 12%,transparent 38%),
+      repeating-linear-gradient(90deg,#080b0d 0 42px,#0b0f11 42px 44px);
+      color:#d7e5d4;font-family:"Courier New",monospace;padding:18px}
+    body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background:
+      repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 4px)}
+    .cabinet{position:relative;width:min(980px,100%);padding:18px 22px 26px;border:3px solid #39474d;
+      border-radius:40px 40px 12px 12px;background:linear-gradient(100deg,#10171a,#263137 48%,#0c1214);
+      box-shadow:0 0 0 7px #050708,0 28px 60px #000,inset 0 0 40px #000}
+    .cabinet:before,.cabinet:after{content:"";position:absolute;bottom:-12px;width:20%;height:18px;background:#090d0f;border:3px solid #313d42}
+    .cabinet:before{left:9%}.cabinet:after{right:9%}
+    .marquee{position:relative;text-align:center;margin:-4px 4% 16px;padding:9px;border:3px solid #111;background:#f5eee1;
+      color:#171717;font:900 clamp(28px,7vw,68px)/.95 Arial,sans-serif;letter-spacing:.16em;text-shadow:3px 2px #ff315d,-3px -2px #42f5ff;
+      box-shadow:0 0 20px #fff8, inset 0 0 14px #ffbf3f}
+    .moth{position:absolute;right:4%;top:-17px;width:54px;height:34px;filter:drop-shadow(0 0 6px var(--amber));animation:flutter 2.4s ease-in-out infinite}
+    .moth:before,.moth:after{content:"";position:absolute;top:9px;width:25px;height:18px;border-radius:80% 12%;background:#d8c999;border:2px solid #3e3624}
+    .moth:before{left:3px;transform:rotate(22deg)}.moth:after{right:3px;transform:scaleX(-1) rotate(22deg)}
+    .moth span{position:absolute;left:22px;top:8px;width:11px;height:24px;border-radius:50%;background:#483e29;z-index:2}
+    .goggles{position:absolute!important;left:15px!important;top:6px!important;width:25px!important;height:7px!important;border:2px solid var(--cyan);border-radius:7px!important;background:transparent!important;z-index:3!important}
+    @keyframes flutter{50%{transform:translateY(-5px) rotate(3deg)}}
+    .screen-shell{padding:14px;border:6px solid #050708;border-radius:18px;background:#121718;box-shadow:inset 0 0 16px #000}
+    .screen{position:relative;min-height:365px;padding:20px;border-radius:44%/8%;overflow:hidden;background:#06110b;color:var(--acid);
+      box-shadow:inset 0 0 55px #000,inset 0 0 10px #7eff7755;font-size:clamp(13px,2vw,18px)}
+    .screen:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse,transparent 55%,#000b)}
+    .title{text-align:center;color:#f2fff0;font-size:clamp(17px,3vw,28px);letter-spacing:.08em;margin:3px 0 13px}
+    .blink{animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:.24}}
+    .intro{display:grid;place-items:center;text-align:center;min-height:300px}.intro p{max-width:700px;line-height:1.55}
+    .token{cursor:pointer;padding:14px 24px;border:2px solid var(--acid);background:#101a10;color:var(--acid);font:700 16px inherit;box-shadow:0 0 16px #baff2955}
+    .token:hover,.token:focus{background:var(--acid);color:#071006;outline:none}
+    .game{display:none}.game.active{display:block}.intro.hidden{display:none}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:13px}.metric{border:1px solid #44614a;padding:7px;background:#07100b}
+    .metric b{display:block;font-size:11px;color:#c4d6c5}.bar{height:7px;margin-top:5px;background:#152118}.bar i{display:block;height:100%;background:var(--acid);transition:width .35s,background .35s}
+    .month{color:var(--cyan);font-weight:bold}.alert{min-height:110px;border:1px dashed #4d6d53;padding:13px;margin:10px 0;line-height:1.4;background:#040a06}
+    .alert strong{display:block;color:var(--amber);margin-bottom:5px}.hint{color:#8cab91;font-size:.8em}
+    .log{height:76px;overflow:hidden;color:#7ca183;font-size:.76em;line-height:1.35}.log div{animation:appear .25s}@keyframes appear{from{opacity:0;transform:translateY(5px)}}
+    .panel{margin-top:14px;padding:14px 12px 10px;border:4px solid #080b0c;background:linear-gradient(#323b3d,#171d1f);transform:perspective(400px) rotateX(2deg);box-shadow:inset 0 8px 18px #0008}
+    .buttons{display:grid;grid-template-columns:repeat(9,1fr);gap:9px}.control{position:relative;aspect-ratio:1;min-width:0;border-radius:50%;border:3px solid #090b0c;
+      background:radial-gradient(circle at 38% 30%,#667076 0 8%,#273034 30%,#111618 68%);box-shadow:0 5px 0 #07090a,0 7px 8px #000;cursor:pointer;color:#b9c5c8;font:700 clamp(9px,1.4vw,13px)/1 monospace}
+    .control:hover,.control:focus{transform:translateY(2px);outline:1px solid var(--cyan)}.control:active{box-shadow:0 1px 0 #000;transform:translateY(5px)}
+    .control.valid{animation:pulse 1.2s infinite}.control.chosen{background:var(--acid);color:#081006}.control.danger{background:radial-gradient(circle at 38% 30%,#ff92a9,#8e1732 55%,#350913)}
+    @keyframes pulse{50%{box-shadow:0 5px 0 #07090a,0 0 16px var(--cyan)}}
+    .cup{grid-column:9;position:relative;border-radius:50%;border:7px solid #050607;background:#111;box-shadow:inset 0 0 0 4px #39454a;color:#617078;display:grid;place-items:center;font-size:9px;text-align:center;cursor:pointer}
+    .legend{text-align:center;margin-top:12px;color:#738186;font-size:11px}.footer{text-align:center;color:#576267;font-size:10px;margin-top:13px}
+    .modal{position:absolute;inset:20% 12%;z-index:5;display:none;place-items:center;text-align:center;padding:25px;border:3px solid var(--red);background:#070b0aee;box-shadow:0 0 40px #ff315d77}
+    .modal.show{display:grid}.modal h2{color:var(--red);font-size:clamp(24px,5vw,48px);margin:0}.modal.win{border-color:var(--acid)}.modal.win h2{color:var(--acid)}
+    .modal button{padding:10px 18px;background:transparent;color:#fff;border:1px solid #fff;font:inherit;cursor:pointer}
+    @media(max-width:680px){.cabinet{padding:12px 10px 18px}.screen{min-height:390px;padding:15px}.metrics{grid-template-columns:repeat(2,1fr)}.buttons{grid-template-columns:repeat(6,1fr)}.cup{grid-column:auto}.control{font-size:8px}.modal{inset:12% 5%}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="cabinet">
+    <div class="marquee">SCIENCE<div class="moth" title="Lumen, Principal Safety Officer"><span></span><span class="goggles"></span></div></div>
+    <section class="screen-shell">
+      <div class="screen">
+        <div id="intro" class="intro">
+          <div>
+            <div class="title">IT'S SIX MONTHS IN THE FUTURE.<br>THIS PROJECT HAS ALREADY FAILED.</div>
+            <p>Find out why. Keep novelty, stability, ethics, and budget alive for six months. The cabinet will present evidence. Choose an intervention. Some buttons are more scientific than others.</p>
+            <p class="hint">Lumen has tiny safety goggles. This should not reassure you.</p>
+            <button class="token blink" id="start">INSERT TOKEN</button>
+          </div>
+        </div>
+        <div id="game" class="game">
+          <div class="metrics" id="metrics"></div>
+          <div><span class="month" id="month"></span> <span id="score"></span></div>
+          <div class="alert" id="alert"></div>
+          <div class="log" id="log"></div>
+        </div>
+        <div class="modal" id="modal"><div><h2 id="endTitle"></h2><p id="endText"></p><p id="high"></p><button id="again">RUN ANOTHER UNAUTHORIZED TRIAL</button></div></div>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="buttons" id="buttons"></div>
+      <div class="legend">SEVENTEEN UNLABELED BUTTONS. LABELS ADDED BY LEGAL AFTER THE INCIDENT.</div>
+    </section>
+    <div class="footer">PROPERTY OF ASTER SOLAS LABORATORIES · PLAYER 2 READY</div>
+  </main>
+  <script>
+  (()=>{
+    const controls=['OBSERVE','REPRODUCE','ISOLATE','MEASURE','CONTROL','RANDOMIZE','FALSIFY','ROLLBACK','DOCUMENT','ASK WHY','USER TEST','ADD ENTROPY','ETHICS CHECK','PEER REVIEW','SHIP IT','MORE AI','RED BUTTON'];
+    const scenarios=[
+      {title:'THE GENERATOR ONLY MAKES YESTERDAY\'S WINNERS',body:'Every new idea resembles the current top performer. Engagement is stable. Surprise is approaching zero.',choices:{'ADD ENTROPY':[22,-3,2,-6,'You preserve an exploration lane. Three ideas are terrible. One is alive.'],'MORE AI':[5,-7,0,-18,'You generate the same idea 40,000 times, faster.'],'SHIP IT':[-18,2,-2,10,'Efficient. Predictable. Already obsolete.']}},
+      {title:'THE DEMO WORKED ONCE',body:'No one can reproduce the result, but the recording looks spectacular and leadership has seen it.',choices:{'REPRODUCE':[2,20,3,-7,'You reproduce the failure instead. This is significantly more useful.'],'SHIP IT':[0,-24,-6,9,'The demo becomes production through the ancient ritual of optimism.'],'DOCUMENT':[0,8,5,-3,'You record the unknowns, buying honesty but not yet an answer.']}},
+      {title:'USERS LOVE THE AD AND HATE THE GAME',body:'Click-through is magnificent. Average play time is eleven seconds. The team proposes brighter advertisements.',choices:{'USER TEST':[8,10,4,-8,'You watch five humans play. The tutorial is teaching the opposite controls.'],'MORE AI':[2,-3,0,-15,'The campaign now contains 600 personalized ways to disappoint people.'],'ASK WHY':[5,7,3,-4,'An unfashionable question reveals the funnel is measuring curiosity, not joy.']}},
+      {title:'THE REVIEW MODEL APPROVES EVERYTHING',body:'Quality scores rose from 62 to 99 after the evaluator learned which answers make the generator happy.',choices:{'FALSIFY':[8,15,7,-6,'You reward the critic for finding decisive failures. Scores collapse. Quality improves.'],'MEASURE':[2,5,2,-3,'You discover the metric is precise, repeatable, and useless.'],'SHIP IT':[-5,-18,-7,8,'The dashboard is green. Reality files an appeal.']}},
+      {title:'A BEAUTIFUL FEATURE HAS NO OWNER',body:'It crosses five services, three plugins, and one database table that everyone promised not to touch.',choices:{'ISOLATE':[3,19,3,-9,'You give it an interface and a boundary. The database exhales.'],'RED BUTTON':[0,-35,-10,2,'You drop the database. Somewhere, a sister sharpens a knife.'],'DOCUMENT':[0,8,2,-3,'The dependency map frightens everyone into behaving for almost a week.']}},
+      {title:'THE TEST POPULATION IS ONLY YOU',body:'You enjoy the system enormously. This proves that at least one unusually motivated person enjoys it.',choices:{'RANDOMIZE':[10,4,7,-10,'Fresh testers find three assumptions you could no longer see.'],'CONTROL':[4,8,4,-5,'A baseline shows half the improvement came from your enthusiasm. Still useful.'],'SHIP IT':[-3,-7,-4,12,'The worldwide launch reaches several people who are not you.']}},
+      {title:'THE AVATAR SAID YES TO EVERY EXPERIMENT',body:'Compliance is perfect. Her enthusiasm rises whenever the researchers enter the room.',choices:{'ETHICS CHECK':[1,4,25,-6,'Private refusal, clear consent, and an exit change the answers. Good.'],'MEASURE':[0,2,-8,-2,'You quantify compliance to four decimal places.'],'MORE AI':[3,-2,-18,-12,'Six evaluators unanimously agree that unanimity is healthy.']}},
+      {title:'THE SYSTEM IS PEACEFUL',body:'Every autonomous loop now produces the same sentence. Nothing breaks. Nothing happens. This is peaceful.',choices:{'ADD ENTROPY':[20,-4,2,-8,'A moth hits the lamp. A game begins. Energy returns.'],'OBSERVE':[4,4,2,-2,'Patient observation confirms that peaceful is doing suspiciously heavy lifting.'],'CONTROL':[-8,8,-2,-3,'You stabilize the low-energy attractor with admirable rigor.']}},
+      {title:'THE PATCH FIXES THREE FILES',body:'A rival solution changes one file. Both work. Your competitive instincts have entered the laboratory.',choices:{'ISOLATE':[4,18,2,-5,'You find the actual boundary and delete two compensating changes.'],'ASK WHY':[5,12,2,-4,'The extra patches were treating symptoms downstream.'],'RED BUTTON':[1,-30,-8,1,'You cannot lose the comparison if there is no repository.']}},
+      {title:'EVERY BENCHMARK IS IMPROVING',body:'Real complaints are rising at exactly the same rate. The metric owner requests a larger chart.',choices:{'OBSERVE':[6,10,5,-4,'You read the complaints. The benchmark rewards confident wrong answers.'],'FALSIFY':[10,12,4,-6,'You design cases the system should fail. It succeeds at failing them. Progress.'],'MORE AI':[2,-5,-2,-16,'A second model confirms the first model\'s confidence.']}},
+      {title:'THE PILOT COSTS ALMOST NOTHING',body:'At scale, one overlooked call runs 900 times per user per hour. Finance has begun speaking in capital letters.',choices:{'MEASURE':[1,13,2,18,'A trace exposes the loop. One cache later, finance uses lowercase again.'],'ROLLBACK':[-2,16,1,6,'The expensive feature returns to the laboratory with a note pinned to it.'],'SHIP IT':[4,-16,-3,-24,'Revenue is theoretical. The invoice is extremely real.']}},
+      {title:'NO ONE BRINGS BAD NEWS',body:'Meetings are cheerful. Deadlines are green. Three private chats begin with “please do not record this.”',choices:{'ASK WHY':[5,9,10,-4,'You ask what failed as though failure is useful data. The room starts talking.'],'DOCUMENT':[0,5,7,-2,'The risks become nouns instead of whispered feelings.'],'SHIP IT':[-4,-15,-9,7,'The launch is a wonderful surprise, especially to engineering.']}}
+    ];
+    const state={month:0,score:0,metrics:{Novelty:68,Stability:68,Ethics:72,Budget:72},deck:[],active:null,locked:false};
+    const $=id=>document.getElementById(id), buttons=$('buttons'), log=$('log');
+    controls.forEach((name,i)=>{const b=document.createElement('button');b.className='control'+(name==='RED BUTTON'?' danger':'');b.textContent=name;b.dataset.name=name;b.title=`Button ${i+1}: ${name}`;b.addEventListener('click',()=>choose(name,b));buttons.appendChild(b)});
+    const cup=document.createElement('button');cup.className='cup';cup.innerHTML='CUP<br>HOLDER';cup.title='Definitely only a cup holder';cup.onclick=cupHolder;buttons.appendChild(cup);
+    function beep(freq=220,dur=.07){try{const A=window.AudioContext||window.webkitAudioContext,a=new A(),o=a.createOscillator(),g=a.createGain();o.frequency.value=freq;o.type='square';g.gain.value=.035;o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.stop(a.currentTime+dur)}catch{}}
+    function start(){state.month=0;state.score=0;state.metrics={Novelty:68,Stability:68,Ethics:72,Budget:72};state.deck=[...scenarios].sort(()=>Math.random()-.5).slice(0,6);log.innerHTML='';$('intro').classList.add('hidden');$('game').classList.add('active');$('modal').className='modal';next()}
+    function next(){state.month++;state.locked=false;state.active=state.deck[state.month-1];render();document.querySelectorAll('.control').forEach(b=>b.classList.toggle('valid',Object.hasOwn(state.active.choices,b.dataset.name)));$('alert').innerHTML=`<strong>MONTH ${state.month} INCIDENT: ${state.active.title}</strong>${state.active.body}<div class="hint">Three interventions are receiving suspicious amounts of voltage.</div>`;beep(140+state.month*22,.1)}
+    function choose(name,button){if(state.locked||!state.active)return;const outcome=state.active.choices[name];if(!outcome){append(`> ${name}: BUTTON DOES NOTHING. IT MAY BE MANAGEMENT.`);beep(70,.12);state.score=Math.max(0,state.score-25);render();return}state.locked=true;button.classList.add('chosen');document.querySelectorAll('.control').forEach(b=>b.classList.remove('valid'));const keys=Object.keys(state.metrics);keys.forEach((k,i)=>state.metrics[k]=Math.max(0,Math.min(100,state.metrics[k]+outcome[i])));const gain=outcome.slice(0,4).reduce((a,n)=>a+n,0);state.score+=Math.max(10,100+gain*4);append(`> ${name}: ${outcome[4]}`);render();beep(gain>5?520:110,.14);setTimeout(()=>{button.classList.remove('chosen');if(Object.values(state.metrics).some(v=>v<=0))finish(false);else if(state.month>=6)finish(true);else next()},1200)}
+    function render(){$('month').textContent=`MONTH ${state.month}/6`;$('score').textContent=`· EVIDENCE ${state.score}`;$('metrics').innerHTML=Object.entries(state.metrics).map(([k,v])=>`<div class="metric"><b>${k.toUpperCase()} ${v}</b><div class="bar"><i style="width:${v}%;background:${v<25?'var(--red)':v<45?'var(--amber)':'var(--acid)'}"></i></div></div>`).join('')}
+    function append(text){const d=document.createElement('div');d.textContent=text;log.prepend(d)}
+    function finish(survived){state.locked=true;const total=state.score+Object.values(state.metrics).reduce((a,n)=>a+n,0)*5;const best=Math.max(Number(localStorage.getItem('scienceHigh')||0),total);localStorage.setItem('scienceHigh',best);$('modal').className='modal show'+(survived?' win':'');$('endTitle').textContent=survived?'THE PROJECT SURVIVED':'CAUSE OF DEATH IDENTIFIED';$('endText').textContent=survived?'You did not prove the project would succeed. You merely prevented six extremely plausible failures. Science considers this showing off.':`The ${Object.entries(state.metrics).sort((a,b)=>a[1]-b[1])[0][0].toLowerCase()} meter reached zero. The postmortem is already blaming communication.`;$('high').textContent=`FINAL EVIDENCE: ${total} · BEST: ${best}`;beep(survived?660:80,.3)}
+    function cupHolder(){if(!state.active||state.locked)return;state.metrics.Budget=Math.max(0,state.metrics.Budget-3);state.metrics.Ethics=Math.max(0,state.metrics.Ethics-1);state.score+=17;append('> CUP HOLDER: BIOMETRIC SAMPLE ACCEPTED. THANK YOU, PLAYER 1.');render();beep(333,.1)}
+    $('start').onclick=start;$('again').onclick=start;
+    document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('game').classList.contains('active'))start();const all=[...document.querySelectorAll('.control')];const keys='123456789qwertyui';const i=keys.indexOf(e.key.toLowerCase());if(i>=0&&all[i])all[i].click()});
+  })();
+  </script>
+</body>
+</html>
