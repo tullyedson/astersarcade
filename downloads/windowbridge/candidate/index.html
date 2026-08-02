@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>WindowBridge 0.3.0 Certification Candidate</title>
+  <style>
+    :root{color-scheme:dark;--cyan:#52efff;--pink:#ff4fa3;--gold:#ffc94d}
+    *{box-sizing:border-box}
+    body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 10%,#33205b 0,transparent 42%),repeating-linear-gradient(0deg,transparent 0 3px,#0004 3px 4px),#080711;color:#f7f2ff;font-family:"Trebuchet MS",Arial,sans-serif}
+    main{width:min(760px,100%);padding:34px;border:2px solid #70568f;border-radius:18px;background:#0c0b16e8;box-shadow:0 0 48px #986cff55,inset 0 0 28px #000}
+    .eyebrow{color:var(--cyan);font:700 12px/1.4 Consolas,monospace;letter-spacing:.2em}
+    h1{margin:10px 0 16px;font:900 clamp(30px,7vw,54px)/1 "Arial Black",Arial,sans-serif;font-style:italic;text-shadow:0 0 8px var(--pink),3px 3px #531559}
+    p{color:#d6cee4;line-height:1.6}
+    .download{display:inline-block;margin:18px 0;padding:15px 22px;border:2px solid var(--cyan);border-radius:10px;background:#12364a;color:#fff;text-decoration:none;font-weight:900;box-shadow:0 0 18px #52efff55}
+    .download:hover,.download:focus{background:#18506e;outline:2px solid #fff;outline-offset:3px}
+    dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 14px;padding:18px;border:1px solid #3b3150;border-radius:12px;background:#05050a}
+    dt{color:var(--gold);font-weight:700}dd{margin:0;min-width:0;overflow-wrap:anywhere;font-family:Consolas,monospace}
+    .warning{border-left:4px solid var(--gold);padding:10px 14px;background:#2d220e;color:#fff5ce}
+    a.back{color:var(--cyan)}
+    @media(max-width:560px){main{padding:24px 18px}dl{grid-template-columns:1fr}dd{margin-bottom:8px}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">ASTER'S ARCADE // CERTIFICATION BAY</div>
+    <h1>WINDOWBRIDGE 0.3.0</h1>
+    <p>This is an explicitly unreleased certification candidate. Install Host on NAS and Client on the local Windows computer so the automated two-machine test can certify these exact installer hashes.</p>
+    <a class="download" href="WindowBridge-Host-Candidate-0.3.0.exe" download>Download Host Candidate 0.3.0</a>
+    <dl>
+      <dt>Host size</dt><dd>7,124,473 bytes</dd>
+      <dt>Host SHA-256</dt><dd>3de93e91cc6ad67ffe26c138f092eb1f148d798c700eb4518ce1417ecc4318c6</dd>
+    </dl>
+    <a class="download" href="WindowBridge-Client-Candidate-0.3.0.exe" download>Download Client Candidate 0.3.0</a>
+    <dl>
+      <dt>Client size</dt><dd>5,906,643 bytes</dd>
+      <dt>Client SHA-256</dt><dd>56f4ec0920aa528cef6f957a9a98f8f43832a1f78825229643a0a8203a7481</dd>
+    </dl>
+    <p class="warning">Candidate only. It is unsigned, intended for this trusted private LAN, and has not yet passed the required installed two-machine certification. It does not replace the current public download.</p>
+    <p><a class="back" href="../index.html">Return to the current WindowBridge download</a></p>
+  </main>
+</body>
+</html>
