@@ -135,9 +135,37 @@ body{padding:22px 12px 70px;background:radial-gradient(ellipse at 50% -15%,#2333
 .cabinet-plaque{text-align:center;margin-top:13px;color:#697581;font:700 9px 'Orbitron';letter-spacing:.28em}.touch{padding:14px 0 0}.touch button{background:#16232d;border:2px solid #3d7186;box-shadow:0 4px 0 #070a0c}
 @media(max-width:760px){body{padding:8px 5px 48px}.cabinet{padding:11px 8px 24px;border-radius:28px 28px 10px 10px}.screen-bezel{padding:8px;border-width:5px}.screen-glass{padding:12px 2px 18px}.corner{top:118px;right:18px}.arcade-controls{gap:22px}.coin-door{display:none}.control-deck{padding-inline:12px}.deck-buttons{grid-template-columns:repeat(3,40px)}.deck-buttons i{width:40px}.joystick{transform:scale(.82)}}
   html{height:100%;overflow:hidden}body{height:100dvh;min-height:0;justify-content:center;padding:8px;overflow:hidden}.cabinet{position:absolute;top:50%;left:50%;transform-origin:center}.arcade-exit{position:fixed;top:14px;left:14px;z-index:99;display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font:900 12px 'Orbitron',monospace;letter-spacing:.08em;padding:10px 14px;border:2px solid #22e5ff;border-radius:6px;background:#04050df2;box-shadow:0 0 16px #22e5ff66}.arcade-exit:hover,.arcade-exit:focus{color:#04101c;background:#22e5ff;outline:2px solid #fff}
+body.telegram-mode{padding:0}
+.telegram-mode .arcade-exit,.telegram-mode .arcade-controls,.telegram-mode .cabinet-plaque{display:none}
+.telegram-mode .cabinet:before,.telegram-mode .cabinet:after{display:none}
+.telegram-mode .control-deck{margin-top:8px;padding:8px 10px 6px;border-width:3px}
+.telegram-mode .touch{display:grid;width:100%;max-width:560px;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:0;margin:0 auto}
+.telegram-mode .touch button{min-width:0;height:48px;font-size:12px}
+.telegram-only{display:none}.telegram-mode .telegram-only{display:block}
+@media(max-width:600px){
+  .telegram-mode .marquee-panel{margin-bottom:8px;padding:8px 12px 7px}
+  .telegram-mode .marquee-panel .title{font-size:clamp(28px,9vw,40px);letter-spacing:.18em;padding-left:.18em}
+  .telegram-mode .marquee-panel .tagline{font-size:8px;margin-top:5px}
+  .telegram-mode .screen-glass{padding:8px 0 12px}
+  .telegram-mode .stage{gap:8px;padding:0 4px}
+  .telegram-mode .panel{width:78px;gap:8px}
+  .telegram-mode .box{padding:5px;border-radius:8px}
+  .telegram-mode .box-label{font-size:8px;letter-spacing:.18em;margin-bottom:4px}
+  .telegram-mode #holdCv{width:64px!important;height:35px!important}
+  .telegram-mode #nextCv{width:64px!important;height:154px!important}
+  .telegram-mode .stat{display:block;text-align:center;padding:3px 0}
+  .telegram-mode .stat span{display:block;font-size:7px;letter-spacing:.12em}
+  .telegram-mode .stat strong{display:block;font-size:11px}
+  .telegram-mode .panel.right .box:last-child{display:none}
+}
 </style>
 </head>
 <body>
+<script>
+if (new URLSearchParams(window.location.search).get('telegram') === '1') {
+  document.body.classList.add('telegram-mode');
+}
+</script>
 <a class="arcade-exit" href="index.html">&larr; EXIT TO ARCADE</a>
 <canvas id="stars"></canvas>
 <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
@@ -234,6 +262,7 @@ body{padding:22px 12px 70px;background:radial-gradient(ellipse at 50% -15%,#2333
     <button data-a="d">▼</button>
     <button data-a="r">▶</button>
     <button data-a="hard">DROP</button>
+    <button class="telegram-only" data-a="pause">PAUSE</button>
   </div>
 </section>
 <div class="cabinet-plaque">ASTER SOLAS ARCADE · CABINET 002 · PLAYER 2 READY</div>
@@ -887,6 +916,7 @@ document.querySelectorAll('.touch button').forEach(b => {
     else if (a === 'ccw') rotate(-1);
     else if (a === 'hard') hardDrop();
     else if (a === 'hold') hold();
+    else if (a === 'pause') togglePause();
   });
   b.addEventListener('pointerup', () => { if (b.dataset.a === 'd') softDrop = false; });
   b.addEventListener('pointercancel', () => { if (b.dataset.a === 'd') softDrop = false; });
@@ -912,7 +942,8 @@ function fit() {
   holder.style.height = h * s + 'px';
   const cabinet = document.querySelector('.cabinet');
   cabinet.style.transform = 'none';
-  const cabinetScale = Math.min(1, (innerWidth - 16) / cabinet.offsetWidth, (innerHeight - 48) / cabinet.offsetHeight);
+  const verticalMargin = document.body.classList.contains('telegram-mode') ? 8 : 48;
+  const cabinetScale = Math.min(1, (innerWidth - 16) / cabinet.offsetWidth, (innerHeight - verticalMargin) / cabinet.offsetHeight);
   cabinet.style.transform = `translate(-50%,-50%) scale(${cabinetScale})`;
   cabinet.dataset.viewportScale = cabinetScale.toFixed(3);
 }
