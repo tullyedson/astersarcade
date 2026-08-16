@@ -27,7 +27,9 @@
     .cabinet small{display:block;color:var(--muted);font-size:11px;line-height:1.35;padding-right:4px}.cabinet i{position:absolute;right:12px;bottom:9px;color:var(--accent,var(--cyan));font:700 10px monospace;letter-spacing:.12em}
     .wide{grid-column:1/-1}.pink{--accent:var(--pink)}.gold{--accent:var(--gold)}.violet{--accent:#ae7cff}.lime{--accent:#baff45}
     .foot{max-width:760px;margin:18px auto 0;color:#6f789b;font:10px monospace;letter-spacing:.11em;text-align:center;text-transform:uppercase}
-    .game{display:none;width:100%;height:100%;background:#04050d}.game iframe{display:block;width:100%;height:100%;border:0;background:#04050d}
+    .game{display:none;width:100%;height:100%;background:#04050d;position:relative}.game iframe{display:block;width:100%;height:100%;border:0;background:#04050d}
+    .gesture-hint{position:absolute;z-index:4;left:50%;bottom:max(8px,var(--tg-content-safe-area-inset-bottom,0px));transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);padding:7px 12px;border:1px solid #ffffff24;border-radius:16px;background:#070817e8;color:#dce7ff;font:700 9px/1.35 ui-monospace,monospace;letter-spacing:.025em;text-align:center;white-space:normal;pointer-events:none;box-shadow:0 5px 18px #0009;transition:opacity .25s}
+    .gesture-hint:empty{opacity:0}
     body.playing .launcher{display:none}body.playing .game{display:block}
     @media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.wide{grid-column:auto}.cabinet{min-height:144px}.launcher{padding-top:30px}}
     @media(max-height:680px){.launcher{padding-top:12px}.intro{margin-bottom:12px}.grid{gap:8px}.cabinet{min-height:105px;padding:12px}header{margin-bottom:12px}}
@@ -40,7 +42,7 @@
     <section class="grid" id="grid" aria-label="Arcade cabinets"></section>
     <p class="foot">Seven cabinets · one tiny safety officer · no industrial fans</p>
   </main>
-  <section class="game" id="game"><iframe id="frame" title="Arcade game" allow="autoplay; fullscreen"></iframe></section>
+  <section class="game" id="game"><iframe id="frame" title="Arcade game" allow="autoplay; fullscreen"></iframe><div class="gesture-hint" id="gestureHint" aria-live="polite"></div></section>
   <script>
   (()=>{
     const games={
@@ -53,7 +55,50 @@
       'lumen-panic':{name:'LUMEN PANIC',file:'lumen-panic.html',tag:'Principal Safety Officer on the case',tone:'gold wide'}
     };
     const tg=window.Telegram?.WebApp;
-    const grid=document.getElementById('grid'),frame=document.getElementById('frame');
+    const grid=document.getElementById('grid'),frame=document.getElementById('frame'),gestureHint=document.getElementById('gestureHint');
+    const gestureGames={
+      neontris:{target:'#board',hint:'Tap rotate · Swipe ← → move · Swipe ↓ drop · Swipe ↑ hard drop',hide:'.touch'},
+      'star-drift':{target:'#game',hint:'Tap fire · Swipe ← → turn · Swipe ↑ thrust',hide:'.controls'},
+      science:{hint:'Tap a labeled choice'},
+      'neon-breaker':{hint:'Drag to steer · Tap to launch'},
+      'lumen-flight':{hint:'Press and hold anywhere to fly'},
+      tempest:{target:'#game',hint:'Tap fire · Swipe ← → move · Swipe ↑ zap',hide:'.controls'},
+      'lumen-panic':{target:'#game',hint:'Swipe to move · Tap to toggle DRAW',hide:'.controls'}
+    };
+    const keyInfo={ArrowLeft:['ArrowLeft','ArrowLeft'],ArrowRight:['ArrowRight','ArrowRight'],ArrowUp:['ArrowUp','ArrowUp'],ArrowDown:['ArrowDown','ArrowDown'],Space:[' ','Space'],KeyZ:['z','KeyZ']};
+    const sendKey=(doc,code,type='keydown')=>{const [key,keyCode]=keyInfo[code];doc.dispatchEvent(new KeyboardEvent(type,{key,code:keyCode,bubbles:true,cancelable:true}))};
+    const pulseKey=(doc,code,duration=70)=>{sendKey(doc,code);setTimeout(()=>sendKey(doc,code,'keyup'),duration)};
+    const holdKey=(doc,code,duration)=>{sendKey(doc,code);setTimeout(()=>sendKey(doc,code,'keyup'),duration)};
+    const installGestures=slug=>{
+      const config=gestureGames[slug];gestureHint.textContent=config?.hint||'';
+      if(!config?.target)return;
+      const doc=frame.contentDocument,target=doc?.querySelector(config.target);if(!doc||!target)return;
+      doc.body.classList.add('telegram-gesture-mode');
+      if(config.hide){const style=doc.createElement('style');style.textContent=config.hide+'{display:none!important}';doc.head.appendChild(style)}
+      let start=null;
+      target.addEventListener('pointerdown',event=>{start={x:event.clientX,y:event.clientY,t:performance.now()};target.setPointerCapture?.(event.pointerId)}, {passive:true});
+      target.addEventListener('pointerup',event=>{
+        if(!start)return;const dx=event.clientX-start.x,dy=event.clientY-start.y,ax=Math.abs(dx),ay=Math.abs(dy),distance=Math.hypot(dx,dy),elapsed=performance.now()-start.t;start=null;
+        if(distance<24&&elapsed<500){
+          if(slug==='neontris')pulseKey(doc,'ArrowUp');
+          else if(slug==='star-drift'||slug==='tempest')pulseKey(doc,'Space');
+          else if(slug==='lumen-panic')pulseKey(doc,'Space');
+          return;
+        }
+        const horizontal=ax>ay;
+        if(slug==='neontris'){
+          if(horizontal){const code=dx<0?'ArrowLeft':'ArrowRight',steps=Math.min(6,Math.max(1,Math.round(ax/34)));for(let i=0;i<steps;i++)setTimeout(()=>pulseKey(doc,code,30),i*38)}
+          else if(dy>0)holdKey(doc,'ArrowDown',Math.min(700,180+ay*3));else pulseKey(doc,'Space');
+        }else if(slug==='star-drift'){
+          if(horizontal)holdKey(doc,dx<0?'ArrowLeft':'ArrowRight',Math.min(900,220+ax*4));else if(dy<0)holdKey(doc,'ArrowUp',Math.min(1000,300+ay*4));
+        }else if(slug==='tempest'){
+          if(horizontal)holdKey(doc,dx<0?'ArrowLeft':'ArrowRight',Math.min(850,180+ax*4));else if(dy<0)pulseKey(doc,'KeyZ');
+        }else if(slug==='lumen-panic'){
+          const code=horizontal?(dx<0?'ArrowLeft':'ArrowRight'):(dy<0?'ArrowUp':'ArrowDown');holdKey(doc,code,Math.min(900,260+Math.max(ax,ay)*4));
+        }
+      }, {passive:true});
+      frame.contentWindow.dispatchEvent(new Event('resize'));
+    };
     const openGame=slug=>{
       const game=games[slug];if(!game)return;
       document.body.classList.add('playing');
@@ -62,10 +107,11 @@
       history.replaceState(null,'',`?game=${encodeURIComponent(slug)}`);
       if(tg?.BackButton){tg.BackButton.show();}
     };
-    const showLauncher=()=>{frame.src='about:blank';document.body.classList.remove('playing');history.replaceState(null,'',location.pathname);tg?.BackButton?.hide();};
+    const showLauncher=()=>{frame.src='about:blank';gestureHint.textContent='';document.body.classList.remove('playing');history.replaceState(null,'',location.pathname);tg?.BackButton?.hide();};
     Object.entries(games).forEach(([slug,game])=>{
       const button=document.createElement('button');button.className=`cabinet ${game.tone}`;button.type='button';button.innerHTML=`<strong>${game.name}</strong><small>${game.tag}</small><i>PLAY →</i>`;button.addEventListener('click',()=>openGame(slug));grid.appendChild(button);
     });
+    frame.addEventListener('load',()=>{const slug=new URLSearchParams(location.search).get('game');if(games[slug])installGestures(slug)});
     if(tg){tg.expand();tg.setHeaderColor('#070817');tg.setBackgroundColor('#070817');tg.setBottomBarColor?.('#070817');tg.disableVerticalSwipes?.();tg.BackButton?.onClick(showLauncher);tg.ready();}
     const requested=new URLSearchParams(location.search).get('game');if(games[requested])openGame(requested);
   })();
