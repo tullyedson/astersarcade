@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#070817">
+  <title>Aster's Arcade | Telegram</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+  <style>
+    *{box-sizing:border-box}
+    :root{--bg:#070817;--panel:#101329;--ink:#f6f2ff;--muted:#9ca7c8;--cyan:#57f3ff;--pink:#ff4fba;--gold:#ffd36a}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+    body{height:var(--tg-viewport-stable-height,100dvh);padding:var(--tg-content-safe-area-inset-top,var(--tg-safe-area-inset-top,0)) var(--tg-content-safe-area-inset-right,var(--tg-safe-area-inset-right,0)) var(--tg-content-safe-area-inset-bottom,var(--tg-safe-area-inset-bottom,0)) var(--tg-content-safe-area-inset-left,var(--tg-safe-area-inset-left,0))}
+    .launcher{height:100%;overflow:auto;padding:20px 16px 28px;background:radial-gradient(circle at 15% 5%,#263078 0,transparent 31%),radial-gradient(circle at 90% 0,#6a1454 0,transparent 27%),linear-gradient(#070817,#04040c)}
+    header{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:2px auto 18px;max-width:760px}
+    h1{margin:0;font:900 clamp(29px,9vw,54px)/.9 "Arial Black",system-ui,sans-serif;letter-spacing:-.055em;text-transform:uppercase;text-shadow:3px 3px 0 #cf2d92}
+    h1 span{display:block;color:var(--cyan);font-size:.34em;letter-spacing:.32em;text-shadow:none;margin:0 0 8px 3px}
+    .lamp{width:44px;height:44px;flex:0 0 auto;border-radius:50%;background:var(--gold);box-shadow:0 0 12px #ffd36a,0 0 38px #ffd36a88;position:relative}
+    .lamp:after{content:"";position:absolute;left:17px;top:44px;width:10px;height:18px;background:#9d7632}
+    .intro{max-width:760px;margin:0 auto 18px;color:var(--muted);font-size:13px;line-height:1.45}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:760px;margin:auto}
+    .cabinet{position:relative;min-height:126px;padding:14px;border:1px solid #ffffff20;border-radius:17px;background:linear-gradient(145deg,#191d3b,#0d1023);color:var(--ink);text-align:left;box-shadow:0 10px 24px #0008,inset 0 1px #ffffff12;cursor:pointer;overflow:hidden}
+    .cabinet:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}.cabinet:active{transform:translateY(2px)}
+    .cabinet:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--accent,var(--cyan));box-shadow:0 0 14px var(--accent,var(--cyan))}
+    .cabinet strong{display:block;font:900 15px/1.05 "Arial Black",system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+    .cabinet small{display:block;color:var(--muted);font-size:11px;line-height:1.35;padding-right:4px}.cabinet i{position:absolute;right:12px;bottom:9px;color:var(--accent,var(--cyan));font:700 10px monospace;letter-spacing:.12em}
+    .wide{grid-column:1/-1}.pink{--accent:var(--pink)}.gold{--accent:var(--gold)}.violet{--accent:#ae7cff}.lime{--accent:#baff45}
+    .foot{max-width:760px;margin:18px auto 0;color:#6f789b;font:10px monospace;letter-spacing:.11em;text-align:center;text-transform:uppercase}
+    .game{display:none;width:100%;height:100%;background:#04050d}.game iframe{display:block;width:100%;height:100%;border:0;background:#04050d}
+    body.playing .launcher{display:none}body.playing .game{display:block}
+    @media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.wide{grid-column:auto}.cabinet{min-height:144px}.launcher{padding-top:30px}}
+    @media(max-height:680px){.launcher{padding-top:12px}.intro{margin-bottom:12px}.grid{gap:8px}.cabinet{min-height:105px;padding:12px}header{margin-bottom:12px}}
+  </style>
+</head>
+<body>
+  <main class="launcher" id="launcher">
+    <header><h1><span>After-hours access</span>Aster's Arcade</h1><div class="lamp" aria-label="Lumen's warm lamp"></div></header>
+    <p class="intro">Choose a cabinet. Lumen has completed an inspection circuit and found everything extremely playable.</p>
+    <section class="grid" id="grid" aria-label="Arcade cabinets"></section>
+    <p class="foot">Seven cabinets · one tiny safety officer · no industrial fans</p>
+  </main>
+  <section class="game" id="game"><iframe id="frame" title="Arcade game" allow="autoplay; fullscreen"></iframe></section>
+  <script>
+  (()=>{
+    const games={
+      neontris:{name:'NEONTRIS',file:'tetris.html',tag:'Falling blocks, unreasonable glow',tone:'cyan'},
+      science:{name:'SCIENCE',file:'science.html',tag:'Operational decisions under pressure',tone:'lime'},
+      'star-drift':{name:'STAR DRIFT',file:'star-drift.html',tag:'Pilot through the electric dark',tone:'violet'},
+      'neon-breaker':{name:'NEON BREAKER',file:'neon-breaker.html',tag:'The wall has made assumptions',tone:'pink'},
+      'lumen-flight':{name:'LUMEN FLIGHT',file:'lumen-flight.html',tag:'Tiny wings, questionable safeguards',tone:'gold'},
+      tempest:{name:'TEMPEST',file:'tempest.html',tag:'Survive the geometry',tone:'cyan'},
+      'lumen-panic':{name:'LUMEN PANIC',file:'lumen-panic.html',tag:'Principal Safety Officer on the case',tone:'gold wide'}
+    };
+    const tg=window.Telegram?.WebApp;
+    const grid=document.getElementById('grid'),frame=document.getElementById('frame');
+    const openGame=slug=>{
+      const game=games[slug];if(!game)return;
+      document.body.classList.add('playing');
+      frame.title=`Play ${game.name}`;
+      frame.src=`${game.file}?telegram=1&v=1`;
+      history.replaceState(null,'',`?game=${encodeURIComponent(slug)}`);
+      if(tg?.BackButton){tg.BackButton.show();}
+    };
+    const showLauncher=()=>{frame.src='about:blank';document.body.classList.remove('playing');history.replaceState(null,'',location.pathname);tg?.BackButton?.hide();};
+    Object.entries(games).forEach(([slug,game])=>{
+      const button=document.createElement('button');button.className=`cabinet ${game.tone}`;button.type='button';button.innerHTML=`<strong>${game.name}</strong><small>${game.tag}</small><i>PLAY →</i>`;button.addEventListener('click',()=>openGame(slug));grid.appendChild(button);
+    });
+    if(tg){tg.expand();tg.setHeaderColor('#070817');tg.setBackgroundColor('#070817');tg.setBottomBarColor?.('#070817');tg.disableVerticalSwipes?.();tg.BackButton?.onClick(showLauncher);tg.ready();}
+    const requested=new URLSearchParams(location.search).get('game');if(games[requested])openGame(requested);
+  })();
+  </script>
+</body>
+</html>

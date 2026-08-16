@@ -18,7 +18,9 @@ Each game is a self-contained HTML page with no server-side runtime.
 
 ## Telegram Mini Apps
 
-- NEONTRIS (`telegram-tetris.html`) reuses the cabinet game in a mobile-first Telegram shell with dedicated touch controls.
+- The Telegram Arcade launcher (`telegram-arcade.html`) opens all seven cabinets from one mobile-first Telegram Mini App shell.
+- Direct launcher URLs use `telegram-arcade.html?game=<slug>` for `neontris`, `science`, `star-drift`, `neon-breaker`, `lumen-flight`, `tempest`, and `lumen-panic`.
+- The original NEONTRIS wrapper (`telegram-tetris.html`) remains available for compatibility.
 
 ## Upstairs
 
